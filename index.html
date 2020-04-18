@@ -90,7 +90,7 @@
 <p><strong>conf:</strong> ICCV 2019</p>
 <p><strong>author:</strong> Xiong Zhang, Qiang Li, Hong Mo, Wenbo Zhang, Wen Zheng</p>
 <p><strong>codes available at:</strong> <a href="https://github.com/Wavelet303/HAMR" target="_blank" rel="noopener">code link</a>(only inference code available)</p>
-<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/.com//HAMR-framework.png" alt="HAMR-framework"></p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/.io//HAMR-framework.png" alt="HAMR_framework"></p>
 <h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
 <li>single RGB 图像缺少深度信息，对于hand这种自遮挡较严重，表达复杂多样的任务，具有较大难度。</li>
 <li>数据标注难度大，目前有几个人工合成的数据，但是合成数据跟真实的数据之间是存在gap的</li>
@@ -105,14 +105,14 @@
 <li>在每个3*3卷积后增加了BN层</li>
 <li>不止获得21个joints heatmap，增加了一些冗余来增加特征</li>
 </ul>
-<p>对于参数回归（Iterative Regression Module）：<br><img src="/.com//regression.png" alt="Iterative Regression Module"></p>
+<p>对于参数回归（Iterative Regression Module）：<br><img src="/.io//regression.png" alt="Iterative Regression Module"></p>
 <ul>
 <li>输入包括joints heatmap，冗余feature maps，hourglass的中间层feature maps</li>
 <li>网络结构是简单的全卷积+三层全连接层</li>
 <li>最后输出两个参数（相机参数，mesh参数）</li>
 <li>整个过程是迭代进行的</li>
 </ul>
-<p>其中相机参数（s, tx, ty）由三个数组成。GT——在知道2d，3d坐标后，可以反向求解得到该参数。<br><img src="/.com//coord2K.png" alt="coord2K"><br><img src="/.com//3d-2d.png" alt="3d-2d"></p>
+<p>其中相机参数（s, tx, ty）由三个数组成。GT——在知道2d，3d坐标后，可以反向求解得到该参数。<br><img src="/.io//coord2K.png" alt="coord2K"><br><img src="/.io//3d-2d.png" alt="3d-2d"></p>
 <p>mesh参数（MANO参数）：</p>
 <ul>
 <li>β： shape参数，10维，控制hand的具体shape信息，如胖瘦，手指粗细等，是一种PCA的参数</li>
@@ -127,7 +127,7 @@
 <li>camera loss：相机内参loss，L2 loss</li>
 <li>seg loss：mesh的投影跟hand的GT silhouette之间的 L1 loss</li>
 </ul>
-<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><p><img src="/.com//result1.png" alt="coord2K"><br><img src="/.com//result2.png" alt="3d-2d"><br><img src="/.com//result3.png" alt="coord2K"></p>
+<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><p><img src="/.io//result1.png" alt="coord2K"><br><img src="/.io//result2.png" alt="3d-2d"><br><img src="/.io//result3.png" alt="coord2K"></p>
 <h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2><p>本文算是很直接的利用MANO模型的例子，没有很复杂的网络结构，思路也非常直接，总体来说亮点不算很明显，主要在于做的早，很快的把人体的工作迁移到了hand上。</p>
 <p>值得注意的是，本文同样是尽可能的利用了各种能用的监督信息。这一点在hand任务中应该确实是挺重要的。</p>
 
@@ -137,8 +137,6 @@
       <a data-url="https://zhang-mohole.github.io/2020/04/06/202004060009-ICCV2019-HAMR/" data-id="ck8om8jw40000mv077ial2w95" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li></ul>
-
     </footer>
   </div>
   
@@ -205,23 +203,9 @@
 
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li></ul>
-    </div>
-  </div>
-
 
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/ICCV2019/" style="font-size: 10px;">ICCV2019</a> <a href="/tags/hand-pose-mesh/" style="font-size: 10px;">hand pose mesh</a>
-    </div>
-  </div>
-
   
     
   <div class="widget-wrap">
