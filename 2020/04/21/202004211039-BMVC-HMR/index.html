@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>202004211039-BMVC-HMR | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Single Image 3D Hand Reconstruction with Mesh Convolutionsnote at: 202004211039 labels: hand pose mesh conf: BMVC 2019(CCF C) author: Dominik Kulon codes available at: code link framework problems to">
+<meta property="og:type" content="article">
+<meta property="og:title" content="202004211039-BMVC-HMR">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Single Image 3D Hand Reconstruction with Mesh Convolutionsnote at: 202004211039 labels: hand pose mesh conf: BMVC 2019(CCF C) author: Dominik Kulon codes available at: code link framework problems to">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/loss.png">
+<meta property="article:published_time" content="2020-04-21T02:39:55.000Z">
+<meta property="article:modified_time" content="2020-04-21T09:13:25.457Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="hand pose mesh">
+<meta property="article:tag" content="others">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/framework.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zhang-mohole.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-202004211039-BMVC-HMR" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/21/202004211039-BMVC-HMR/" class="article-date">
+  <time datetime="2020-04-21T02:39:55.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      202004211039-BMVC-HMR
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Single-Image-3D-Hand-Reconstruction-with-Mesh-Convolutions"><a href="#Single-Image-3D-Hand-Reconstruction-with-Mesh-Convolutions" class="headerlink" title="Single Image 3D Hand Reconstruction with Mesh Convolutions"></a>Single Image 3D Hand Reconstruction with Mesh Convolutions</h1><p><em>note at:</em> 202004211039</p>
+<p><em>labels:</em> hand pose mesh</p>
+<p><strong>conf:</strong> BMVC 2019(CCF C)</p>
+<p><strong>author:</strong> Dominik Kulon</p>
+<p><strong>codes available at:</strong> <a href="https://github.com/dkulon/hand-reconstruction" target="_blank" rel="noopener">code link</a></p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/21/202004211039-BMVC-HMR/framework.png" alt="framework"></p>
+<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><p>首先，这篇文章关注的问题是hand mesh recovery，并且是单人的，也就是说，hand没有scale variation</p>
+<p>在此之前，MANO模型解决了这个问题，但是作者提出，SMPL based模型的参数太过，计算比较慢。并且MANO的顶点数太少，对细节表达能力不足</p>
+<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>这篇文章描述比之顶会还是差了很远，方法相对来说很简单，也没有很多insight，算是做了一个数据集，一个baseline。（代码公布了，感觉做recovery的话还是可以借鉴一下的）</p>
+<blockquote>
+<p>main contribution</p>
+</blockquote>
+<p>作者主要做了三件事</p>
+<ul>
+<li>做了一个数据集<ul>
+<li>具体制作过程在原文第5章</li>
+<li>每个mesh有7907个定点，是MANO的十倍还多</li>
+<li>包含40360个训练实例，3000个验证实例，3000个测试实例。</li>
+<li>标注包括，mesh，3d keypoint（投影到图像坐标系）</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>做了一个在hand mesh上的autoencoder，输入mesh，得到mesh<ul>
+<li>利用了卷积（看文章的意思，貌似是利用了chebvGCN一样的图卷积）</li>
+<li>encoder：输入mesh定点，经过4个卷积层（conv+down sampling+lReLU）</li>
+<li>经过一个FC层（64）</li>
+<li>decoder：跟encoder对称（这个东西是真正想要的，为了后面从RGB得到mesh而训练）</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>single RGB image到相应的hand mesh<ul>
+<li>image encoder：利用了DenseNet-121提取图像特征，在imageNet上做了预训练，输出两部分：1)用于mesh decoder的mesh embeding，2)用于回归相机参数的camera embeding</li>
+<li>mesh decoder：就是前面autoencoder中的decoder，这里称之为Graph Morphable Model (GMM)——输入为64维隐层特征向量，该向量是image encoder的输出</li>
+<li>camera decoder：用于回归得到一个将mesh投影到跟图像的视角一致的相机参数，输入为image encoder得到的camera embedding，经过几层FC层得到相机参数。</li>
+<li>loss：mesh上的L1，投影得到的keypoint joints对应的L1，RGB经过image encoder得到的embedding（64维向量）跟mesh autoencoder中encoder对GT mesh进行编码得到的embedding之间的L2。(三个loss的加权系数分别为1，0.01，5e-5，并使用了L2正则，正则系数1e-5)<img src="/2020/04/21/202004211039-BMVC-HMR/loss.png" alt="objective func"></li>
+</ul>
+</li>
+</ul>
+<h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><p>这篇文章思路很简单，主要功夫在做数据集上，但是这个数据集又有些局限。并且文章叙述确实是不好，很多地方不太清楚，同时实验部分不清晰，实验结果甚至都看不到，论证的点很多没有相应的实验佐证。</p>
+<p>但无论如何，开源了代码，作为一个baseline的参考还是有价值的。</p>
+<h2 id="available-datasets"><a href="#available-datasets" class="headerlink" title="available datasets"></a>available datasets</h2><p>需要通过发送邮件来跟作者要</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/" data-id="ck99ozik50000b9fy4lgj58hu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/20/202004151649-ICCV2019-A2J/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">202004151649-ICCV2019-A2J</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-depth/" rel="tag">hand pose depth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ICCV2019/" style="font-size: 20px;">ICCV2019</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 20px;">hand pose mesh</a> <a href="/tags/others/" style="font-size: 10px;">others</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/21/202004211039-BMVC-HMR/">202004211039-BMVC-HMR</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/20/202004151649-ICCV2019-A2J/">202004151649-ICCV2019-A2J</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/18/202004060009-ICCV2019-HAMR/">202004060009-ICCV2019-HAMR</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
