@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>202004221543-CVPR2020-MusicGesture | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="A2J: Anchor-to-Joint Regression Network for 3D Articulated Pose Estimation from a Single Depth Imagenote at: 202004221543 labels: others conf: CVPR 2020 author: Chuang Gan (MIT, MIT-IBM Watson AI Lab)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="202004221543-CVPR2020-MusicGesture">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="A2J: Anchor-to-Joint Regression Network for 3D Articulated Pose Estimation from a Single Depth Imagenote at: 202004221543 labels: others conf: CVPR 2020 author: Chuang Gan (MIT, MIT-IBM Watson AI Lab)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/feature-fusion.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/result1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/result2.png">
+<meta property="article:published_time" content="2020-04-22T07:42:46.000Z">
+<meta property="article:modified_time" content="2020-04-22T10:43:36.348Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="others">
+<meta property="article:tag" content="CVPR2020">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/framework.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zhang-mohole.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-202004221543-CVPR2020-MusicGesture" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/" class="article-date">
+  <time datetime="2020-04-22T07:42:46.000Z" itemprop="datePublished">2020-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      202004221543-CVPR2020-MusicGesture
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="A2J-Anchor-to-Joint-Regression-Network-for-3D-Articulated-Pose-Estimation-from-a-Single-Depth-Image"><a href="#A2J-Anchor-to-Joint-Regression-Network-for-3D-Articulated-Pose-Estimation-from-a-Single-Depth-Image" class="headerlink" title="A2J: Anchor-to-Joint Regression Network for 3D Articulated Pose Estimation from a Single Depth Image"></a>A2J: Anchor-to-Joint Regression Network for 3D Articulated Pose Estimation from a Single Depth Image</h1><p><em>note at:</em> 202004221543</p>
+<p><em>labels:</em> others</p>
+<p><strong>conf:</strong> CVPR 2020</p>
+<p><strong>author:</strong> Chuang Gan (MIT, MIT-IBM Watson AI Lab)</p>
+<p><strong>codes available at:</strong> <a href="http://music-gesture.csail.mit.edu" target="_blank" rel="noopener">project page</a></p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/framework.png" alt="framework"></p>
+<h2 id="problems-to-be-solved-task-definition"><a href="#problems-to-be-solved-task-definition" class="headerlink" title="problems to be solved (task definition)"></a>problems to be solved (task definition)</h2><p>问题定义：<br>把不同乐器（不同种，同种不同实例）的音频从视频中各自分离出来</p>
+<p>现有方法的问题：</p>
+<ul>
+<li>虽然现在已经有了一些这个方向的工作，也有工作开始使用visual信息来帮助分离音频。之前的工作都发现了语义信息（semantic appearances）对模型会有帮助，但是这些工作没有考虑视频中的motion cues，这样就限制了这些方法在更复杂的场景下的表现</li>
+<li>最近有人利用了temporal motion信息，但是他们基于运动轨迹和光流这样的特征（trajectory and optical flow like features），仍然是局限在对human-object interactions的建模上，没有关注到更细节的地方。</li>
+</ul>
+<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
+<p>motivation<br>本文中，作者希望利用基于人体关键点的motion cues，同时利用visual feature和sound feature来进行音频分离（sound source separation）</p>
+</blockquote>
+<blockquote>
+<p>method details<br>作者主要在于第一次在这个细分领域使用了关键点信息来表示motion，并且整个work的模型搭建的比较完整，make sense。</p>
+</blockquote>
+<p>主要贡献在三个地方：</p>
+<ul>
+<li><p>Video Analysis Network</p>
+<ul>
+<li><p>这里主要是利用了之前用在其他领域的工作来解决新的问题</p>
+</li>
+<li><p>利用ResNet50来提取视频的首帧特征，用于做visual context feature</p>
+</li>
+<li><p>用了ST-GCN（Spatial tempo- ral graph convolutional networks for skeleton-based action recognition）来对提取的人体关键点在时空上建立图模型</p>
+</li>
+<li><p>利用了alphaPose来提取body关键点，用了一个预训练过的hand detection网络来检测双手，然后利用openpose来提取双手关键点</p>
+</li>
+<li><p>网络细节：</p>
+</li>
+<li><p>这里的GCN有11层，并带有residual link。输入是坐标点+置信度(x,y,c),并且在输入网络之前经过了BN层来使得input scale保持相同（这里还需要看看code理解细节！！！）</p>
+</li>
+<li><p>hand detection网络没有给引用和细节，估计是从git上找了一个</p>
+</li>
+<li><p>在关键点经过GCN处理后，得到的motion feature又跟之前获得的visual context feature进行了拼接，从而加入了图像信息（这个点有点意思的在于，后面的ablation实验的数据加上这个还不如不加，然而作者并没有给出合理的解释~~）</p>
+</li>
+</ul>
+</li>
+<li><p>Audio-Visual Separation Network</p>
+<ul>
+<li><p>这里作者利用了一个U-Net类型的网络，encoder-decoder结构</p>
+</li>
+<li><p>encoder输入时2d 音频的频谱</p>
+</li>
+<li><p>音频信号经encoder得到音频特征后，跟前面的visual+motion feature进行了融合（基于self attention，见下面Audio-visual fusion）</p>
+</li>
+<li><p>然后fusion feature经过对称的decoder得到最终的audio mask</p>
+</li>
+<li><p>网络细节：</p>
+</li>
+<li><p>encoder和decoder对称，都是4层空洞卷积（3 x 3 spatial filters with stride 2, dilation 1 and followed by a BatchNorm layer and a Leaky ReLU）</p>
+</li>
+</ul>
+</li>
+<li><p>Audio-visual fusion</p>
+<ul>
+<li>sound feature和visual feature先经过矩阵乘后softmax来得到attention matrix</li>
+<li>然后利用该matrix跟vision feature矩阵乘，再跟sound feature进行相加</li>
+<li>得到的结果再经过基于MLP的残差网络得到最终的fusion feature</li>
+<li><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/feature-fusion.png" alt="self attention based Audio-visual fusion"></li>
+<li>The MLP is implemented with two fully-connected layers with a ReLU activation function.</li>
+</ul>
+</li>
+</ul>
+<p>至于loss什么的细节，文章本身讲的不多，也不是这篇文章的主要关注点，在此略过。</p>
+<h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><p><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/result1.png" alt="result1"><br><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/result2.png" alt="result2"><br>这里的ablation实验也很简单，但是确实有上面提到的问题。</p>
+<h2 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h2><p>本文不是自己的主业，看了主要是增多一点视频理解的储备知识。<br>从实验结果上来看，基于keypoints和GCN的方式确实是对这种视频的理解有挺大帮助的。</p>
+<h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2><p>本文的思路在对手语翻译这个方向上应该来说有很大的借鉴意义，虽然说文中的一些方法已经被别人用过了，也不算什么新方法。不过其中的feature fusion的方式值得学习一波，手语的不同部位可以看做不同的信息源，融合不同部位的信息应该来说是有用的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zhang-mohole.github.io/2020/04/22/202004221543-CVPR2020-MusicGesture/" data-id="ck9b7lw8k00004vfy8ijeeszj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/21/202004211039-BMVC-HMR/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">202004211039-BMVC-HMR</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-depth/" rel="tag">hand pose depth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CVPR2020/" style="font-size: 10px;">CVPR2020</a> <a href="/tags/ICCV2019/" style="font-size: 20px;">ICCV2019</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 20px;">hand pose mesh</a> <a href="/tags/others/" style="font-size: 20px;">others</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/">202004221543-CVPR2020-MusicGesture</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/21/202004211039-BMVC-HMR/">202004211039-BMVC-HMR</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/20/202004151649-ICCV2019-A2J/">202004151649-ICCV2019-A2J</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/18/202004060009-ICCV2019-HAMR/">202004060009-ICCV2019-HAMR</a>
+          </li>
+        
+          <li>
+            <a href="/2020/03/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
