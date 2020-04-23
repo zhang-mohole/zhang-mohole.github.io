@@ -64,6 +64,89 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-202004232043-CVPR2020-SLT" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/23/202004232043-CVPR2020-SLT/" class="article-date">
+  <time datetime="2020-04-23T12:43:37.000Z" itemprop="datePublished">2020-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/23/202004232043-CVPR2020-SLT/">202004232043-CVPR2020-SLT</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Sign-Language-Transformers-Joint-End-to-end-Sign-Language-Recognition-and-Translation"><a href="#Sign-Language-Transformers-Joint-End-to-end-Sign-Language-Recognition-and-Translation" class="headerlink" title="Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translation"></a>Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translation</h1><p><em>note at:</em> 202004232043</p>
+<p><em>labels:</em> SLT</p>
+<p><strong>conf:</strong> CVPR 2020</p>
+<p><strong>author:</strong> Necati Cihan Camgoz, Oscar Koller</p>
+<p><strong>codes available at:</strong> <a href="https://github.com/neccam/slt" target="_blank" rel="noopener">code link</a></p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/23/202004232043-CVPR2020-SLT/framework.png" alt="framework overview"></p>
+<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><blockquote>
+<p>motivation<br>本文的主要目的是希望通过end2end的方式，直接进行从sign language到自然语言text的手语翻译，同时利用中间态gloss标注作为中间监督，从而使得不会出现sign2gloss2text这种在gloss这里的瓶颈。</p>
+</blockquote>
+<blockquote>
+<p>problems</p>
+</blockquote>
+<ul>
+<li>之前的大部分工作都是做CSLR任务，默认sign video跟text之间是一一对应的，没有复杂的语序等问题</li>
+<li>之前的SLT工作利用了gloss中间态监督信息，但是其分步骤进行翻译的结构使得在得到gloss后形成了一个瓶颈，内在的失去了一些视频中的信息</li>
+<li>手语本身也存在着难以理解的内在复杂性。手语是个集多种信息于一体的语言，在视频中不止有手，包括动作，头，身体，表情等等都是信息的携带点。此外，手语也是一种语言，跟spoken language一样，也是有自己的语法和词汇的，所以默认两者之间存在着简单的直接映射是不合理的。</li>
+</ul>
+<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
+<p>手语处理流程</p>
+</blockquote>
+<ul>
+<li>视觉信息理解</li>
+<li>视觉信息到自然语言的映射</li>
+</ul>
+<blockquote>
+<p>method details</p>
+</blockquote>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/method.png" alt="method framework for single layer"></p>
+<p>整个网络分为三个部分：</p>
+<ul>
+<li>SLRT(Sign Language Recognition Transformers)</li>
+<li>CTC</li>
+<li>SLTT(Sign Language Translation Transformers)</li>
+</ul>
+<h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><blockquote>
+<p>results</p>
+</blockquote>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result1.png" alt="result1"></p>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result2.png" alt="result2"></p>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result3.png" alt="result3"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="references-must-be-checked"><a href="#references-must-be-checked" class="headerlink" title="references must be checked!"></a>references must be checked!</h2><ul>
+<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Sign Language Production using Neural Machine Translation and Generative Adversarial Networks.</em> In Proceedings of the British Machine Vision Conference (BMVC), 2018.</li>
+<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Text2Sign: Towards Sign Language Pro- duction using Neural Machine Translation and Generative Adversarial Networks.</em> International Journal of Computer Vision (IJCV), 2020.</li>
+<li>Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko- reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. <em>Attention is All You Need.</em> In Proceedings of the Advances in Neural Information Processing Systems (NIPS), 2017.</li>
+</ul>
+<h2 id="inspirations"><a href="#inspirations" class="headerlink" title="inspirations"></a>inspirations</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/" data-id="ck9cxe8b300002kfyczbv64df" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SLR/" rel="tag">SLR</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-202004221543-CVPR2020-MusicGesture" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/" class="article-date">
@@ -496,7 +579,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-depth/" rel="tag">hand pose depth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLR/" rel="tag">SLR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-depth/" rel="tag">hand pose depth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
     </div>
   </div>
 
@@ -506,7 +589,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/CVPR2020/" style="font-size: 10px;">CVPR2020</a> <a href="/tags/ICCV2019/" style="font-size: 20px;">ICCV2019</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 20px;">hand pose mesh</a> <a href="/tags/others/" style="font-size: 20px;">others</a>
+      <a href="/tags/CVPR2020/" style="font-size: 20px;">CVPR2020</a> <a href="/tags/ICCV2019/" style="font-size: 20px;">ICCV2019</a> <a href="/tags/SLR/" style="font-size: 10px;">SLR</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 20px;">hand pose mesh</a> <a href="/tags/others/" style="font-size: 20px;">others</a>
     </div>
   </div>
 
@@ -528,6 +611,10 @@
       <ul>
         
           <li>
+            <a href="/2020/04/23/202004232043-CVPR2020-SLT/">202004232043-CVPR2020-SLT</a>
+          </li>
+        
+          <li>
             <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/">202004221543-CVPR2020-MusicGesture</a>
           </li>
         
@@ -541,10 +628,6 @@
         
           <li>
             <a href="/2020/04/18/202004060009-ICCV2019-HAMR/">202004060009-ICCV2019-HAMR</a>
-          </li>
-        
-          <li>
-            <a href="/2020/03/28/hello-world/">Hello World</a>
           </li>
         
       </ul>
