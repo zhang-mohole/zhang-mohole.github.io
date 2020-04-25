@@ -93,8 +93,9 @@
 <p><strong>codes available at:</strong> <a href="https://github.com/neccam/slt" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/23/202004232043-CVPR2020-SLT/framework.png" alt="framework overview"></p>
 <h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><blockquote>
-<p>motivation<br>本文的主要目的是希望通过end2end的方式，直接进行从sign language到自然语言text的手语翻译，同时利用中间态gloss标注作为中间监督，从而使得不会出现sign2gloss2text这种在gloss这里的瓶颈。</p>
+<p>motivation</p>
 </blockquote>
+<p>本文的主要目的是希望通过end2end的方式，直接进行从sign language到自然语言text的手语翻译，同时利用中间态gloss标注作为中间监督，从而使得不会出现sign2gloss2text这种在gloss这里的瓶颈。</p>
 <blockquote>
 <p>problems</p>
 </blockquote>
@@ -107,7 +108,10 @@
 <p>手语处理流程</p>
 </blockquote>
 <ul>
-<li>视觉信息理解</li>
+<li>视觉信息理解<ul>
+<li>这里，是个很重要的环节。在sign2text的模型中，缺少sign2gloss过程，这就相当于直接把视频翻译成自然语言，跨过了对视频的直接理解监督，这种模型的表现普遍不如利用了gloss的。而利用gloss则是相当于在中间加入了中间层监督，这样就可以更好的控制模型对输入视频的正确理解过程。</li>
+</ul>
+</li>
 <li>视觉信息到自然语言的映射</li>
 </ul>
 <blockquote>
@@ -116,9 +120,22 @@
 <p><img src="/2020/04/23/202004232043-CVPR2020-SLT/method.png" alt="method framework for single layer"></p>
 <p>整个网络分为三个部分：</p>
 <ul>
-<li>SLRT(Sign Language Recognition Transformers)</li>
-<li>CTC</li>
-<li>SLTT(Sign Language Translation Transformers)</li>
+<li>SLRT(Sign Language Recognition Transformers)<ul>
+<li>整个网络框架是利用了BERT的结构，整个思路也基本上是一样的，只是输入信息不同。（BERT模型需要另做学习，这里留一个链接坑位吧<a href="？？">BERT 学习笔记</a>）</li>
+<li>input：视频编码——利用CNN提取视频帧的feature。（这里是重要的改进点！！！）</li>
+<li>position embedding：同样是bert模型中的东西，因为基于transformer的模型的并行性，不像RNN那样有着天然的时序信息，这里通过position embedding来对时序进行建模。</li>
+<li>后面又通过self attention来进一步加强了输入视频帧各帧feature之间的语义关系（这里可能是已经能够建模前后帧之间的关系了，如果想在这里加强上下文信息关系，需要好好思考如何进行改进，这个地方更像是纯粹的NLP问题，如果有好的方式，在其他NLP领域应该也会很有用）</li>
+<li>后面经过了feed forward之后又经过了FC（linear）然后softmax算概率，最后送到CTC模块来从frame level到gloss level</li>
+</ul>
+</li>
+<li>CTC<ul>
+<li>这个模块具体内容需要更进一步学习，包括看相关代码，在NLP任务中很重要</li>
+</ul>
+</li>
+<li>SLTT(Sign Language Translation Transformers)<ul>
+<li>这个相当于是decoder，跟bert模型完全一样的</li>
+</ul>
+</li>
 </ul>
 <h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><blockquote>
 <p>results</p>
@@ -126,7 +143,9 @@
 <p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result1.png" alt="result1"></p>
 <p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result2.png" alt="result2"></p>
 <p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result3.png" alt="result3"></p>
-<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="references-must-be-checked"><a href="#references-must-be-checked" class="headerlink" title="references must be checked!"></a>references must be checked!</h2><ul>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文总体来说算是第一次正经的好好解决了SLT的问题，虽然两年前的nslt算是开山之作，但是当时的方法很直接，也很粗暴，相当于是CSLR+NMT的简单使用，并没有做的更细致。而这一篇工作就算是SLT应该有的处理方式了，通过CNN提取视频特征，通过跟视频时序逐次对应的gloss来作为视频理解的中间监督，通过CTC来解决视频维度远大于gloss词维度的问题，然后利用更新的NMT中基于BERT的网络框架来处理翻译任务。</p>
+<p>算是一个很不错的baseline，直观简单，但是确实应该这么做。后面应该还有很大改进的空间，需要在视频理解这里花一些功夫。还有就是视频特征是否可以进行更稀疏的处理，减少不必要的冗余信息。</p>
+<h2 id="references-must-be-checked"><a href="#references-must-be-checked" class="headerlink" title="references must be checked!"></a>references must be checked!</h2><ul>
 <li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Sign Language Production using Neural Machine Translation and Generative Adversarial Networks.</em> In Proceedings of the British Machine Vision Conference (BMVC), 2018.</li>
 <li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Text2Sign: Towards Sign Language Pro- duction using Neural Machine Translation and Generative Adversarial Networks.</em> International Journal of Computer Vision (IJCV), 2020.</li>
 <li>Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko- reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. <em>Attention is All You Need.</em> In Proceedings of the Advances in Neural Information Processing Systems (NIPS), 2017.</li>
