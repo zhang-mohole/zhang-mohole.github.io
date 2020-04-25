@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/result2.png">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/result3.png">
 <meta property="article:published_time" content="2020-04-23T12:43:37.000Z">
-<meta property="article:modified_time" content="2020-04-25T09:02:59.883Z">
+<meta property="article:modified_time" content="2020-04-25T13:54:21.069Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CVPR2020">
 <meta property="article:tag" content="SLR">
@@ -131,7 +131,7 @@
 <p>整个网络分为三个部分：</p>
 <ul>
 <li>SLRT(Sign Language Recognition Transformers)<ul>
-<li>整个网络框架是利用了BERT的结构，整个思路也基本上是一样的，只是输入信息不同。（BERT模型需要另做学习，这里留一个链接坑位吧<a href="？？">BERT 学习笔记</a>）</li>
+<li>整个网络框架是利用了BERT的结构，整个思路也基本上是一样的，只是输入信息不同。（BERT模型需要另做学习，这里留一个链接坑位吧<a href="？？">BERT 学习笔记</a>）<a href="https://github.com/codertimo/BERT-pytorch" target="_blank" rel="noopener">pytorch implement of BERT</a></li>
 <li>input：视频编码——利用CNN提取视频帧的feature。（这里是重要的改进点！！！）</li>
 <li>position embedding：同样是bert模型中的东西，因为基于transformer的模型的并行性，不像RNN那样有着天然的时序信息，这里通过position embedding来对时序进行建模。</li>
 <li>后面又通过self attention来进一步加强了输入视频帧各帧feature之间的语义关系（这里可能是已经能够建模前后帧之间的关系了，如果想在这里加强上下文信息关系，需要好好思考如何进行改进，这个地方更像是纯粹的NLP问题，如果有好的方式，在其他NLP领域应该也会很有用）</li>
@@ -140,6 +140,7 @@
 </li>
 <li>CTC<ul>
 <li>这个模块具体内容需要更进一步学习，包括看相关代码，在NLP任务中很重要</li>
+<li>CTC算法的详细讲解博客：<a href="https://xiaodu.io/ctc-explained/" target="_blank" rel="noopener">CTC 算法解析 part1</a>，<a href="https://xiaodu.io/ctc-explained-part2/" target="_blank" rel="noopener">CTC 算法解析 part2</a>; 百度CTC loss工具包：<a href="https://github.com/baidu-research/warp-ctc" target="_blank" rel="noopener">warp-ctc</a>；<a href="https://github.com/SeanNaren/warp-ctc" target="_blank" rel="noopener">another pytorch implement</a></li>
 </ul>
 </li>
 <li>SLTT(Sign Language Translation Transformers)<ul>
