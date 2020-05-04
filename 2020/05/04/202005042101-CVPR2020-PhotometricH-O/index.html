@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>202005042101-CVPR2020-PhotometricH+O | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstructionnote at: 202005042101 conf: CVPR 2020 author: Yana Hasson codes available at: code link(on the way…) fram">
+<meta property="og:type" content="article">
+<meta property="og:title" content="202005042101-CVPR2020-PhotometricH+O">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstructionnote at: 202005042101 conf: CVPR 2020 author: Yana Hasson codes available at: code link(on the way…) fram">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/framework.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/decoder.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/focal-normalize.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/photometric-loss.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/loss-caculate.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result1.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result3.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result4.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result2.jpeg">
+<meta property="article:published_time" content="2020-05-04T13:01:04.000Z">
+<meta property="article:modified_time" content="2020-05-04T15:04:50.719Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="CVPR2020">
+<meta property="article:tag" content="hand+object">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/framework.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zhang-mohole.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-202005042101-CVPR2020-PhotometricH-O" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/" class="article-date">
+  <time datetime="2020-05-04T13:01:04.000Z" itemprop="datePublished">2020-05-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      202005042101-CVPR2020-PhotometricH+O
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Leveraging-Photometric-Consistency-over-Time-for-Sparsely-Supervised-Hand-Object-Reconstruction"><a href="#Leveraging-Photometric-Consistency-over-Time-for-Sparsely-Supervised-Hand-Object-Reconstruction" class="headerlink" title="Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction"></a>Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction</h1><p><em>note at:</em> 202005042101</p>
+<p><strong>conf:</strong> CVPR 2020</p>
+<p><strong>author:</strong> Yana Hasson</p>
+<p><strong>codes available at:</strong> <a href="https://hassony2.github.io/handobjectconsist" target="_blank" rel="noopener">code link</a>(on the way…)</p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/framework.jpeg" alt="framework"></p>
+<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
+<li>手跟物体交互场景下手跟物体的互遮挡现象严重</li>
+<li>3d数据标注成本非常高，当前数据集在该任务上难以做全监督的学习<ul>
+<li>motion capture datasets:虽然可以提供大量具有精确标注的训练样本，但是这些数据只能在特定条件下采集，并且会有可见的传感器之类的东西，这些出现在rgb image中会影响模型</li>
+<li>multi-view setups:虽然可以通过multiview来获得3d信息，但是这种数据也是对场景（采集条件）有特定要求</li>
+<li>synthetic datasets:虽然是一种方法，但是目前而言，合成数据仍然存在domain gap的问题</li>
+<li>手工标注以及optimization-based方式:太费时间</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>motivation</p>
+</blockquote>
+<p>基于以上问题，本文提出了一种新的思路：利用视频数据在时间维度上的光度测量一致性(photometric consistency)，在数据集中只有少量子数据集有3d标注时可以进行从single RGB到hand and object基于弱监督（自监督）的重建。</p>
+<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文在主体框架上思路比较简单，就是一个encoder对图像进行特征提取，然后利用提取到的特征进行hand的pose+shape参数回归（基于MANO模型）以及object的6d pose回归</p>
+<blockquote>
+<p>reconstruction</p>
+</blockquote>
+<p>网络结构即上文中的框架，利用了非常简单的ResNet-18作为encoder(除去最后一层分类层)提取图像特征<br>接下来decoder部分分为三个部分：</p>
+<ul>
+<li>MANO based hand reconstruction，目标是获得28维MANO参数(3 global rotation,15 pose, 10 shape)</li>
+<li>object的6d pose estimation。 mesh已知，目标是获得6维object pose参数</li>
+<li>global hand translation参数回归。目标是获得3维全局转换向量，用于得到点在世界坐标系中的坐标。</li>
+<li><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/decoder.jpeg" alt="decoder net details"></li>
+<li>数据处理上，作者利用了一种基于相机焦距的normalize方法：<img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/focal-normalize.jpeg" alt="focal normalize">，在已知这里的d_f, (t_u, t_v)以及相机内参后，可以得到global translation。（这里还有一个global rotation，论文只有一句话，没看明白是要干什么？）</li>
+</ul>
+<blockquote>
+<p>photometric consistency loss</p>
+</blockquote>
+<p>本文中作者最核心的创新在于提出的photometric consistency loss，并利用该loss在该任务上进行了自监督学习。<br><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/photometric-loss.jpeg" alt="photometric consistency loss"></p>
+<p>该loss的设计思想是，给一个ref image: I_ref，它带有3d标注，要进行重建的image为I_ref+k。那么在ref+k重建后，将重建得到的vetices投影到image 空间，给每个vertices赋予在image空间上对应点的color值，因为物体和手都是同一个，那么ref+k经过这种投影赋值的结果应该跟ref相应的值一样。把这种想法设计成了一种loss。</p>
+<p>具体步骤（跟整体思想稍有不一样）：</p>
+<ul>
+<li>首先获得ref+k的reconstruction；计算ref到ref+k相应vertices的3d displacement(“flow”)，然后将之投影到image空间（在mesh的可见区域进行插值），这里利用了引文[20]”Neural Renderer”。这样就建立了从ref到ref+k之间的warping flow，即一个矩阵W</li>
+<li>然后利用该W以及一个visible mask来在image上得到loss：<img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/loss-caculate.jpeg" alt="photometric loss"></li>
+<li>(这个loss的一些细节没有看懂，这里存在两个引文的盲区[20], cyclic consistency check-[14,29])</li>
+</ul>
+<h2 id="expriments-and-results"><a href="#expriments-and-results" class="headerlink" title="expriments and results"></a>expriments and results</h2><p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result1.jpeg" alt="comparing with SOTA"></p>
+<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result3.jpeg" alt="PCK and weakly supervised"></p>
+<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result4.jpeg" alt="ablation"></p>
+<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result2.jpeg" alt="qualitative results"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/" data-id="ck9sm7ycq000042fy526f7ysf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hand-object/" rel="tag">hand+object</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">202004080031-ECCV2018-2.5D_heatmap</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CVPR2020/" rel="tag">CVPR2020</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECCV2018/" rel="tag">ECCV2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ICCV2019/" rel="tag">ICCV2019</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLR/" rel="tag">SLR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SLT/" rel="tag">SLT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-RGB/" rel="tag">hand pose RGB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-depth/" rel="tag">hand pose depth</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-pose-mesh/" rel="tag">hand pose mesh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hand-object/" rel="tag">hand+object</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/others/" rel="tag">others</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CVPR2020/" style="font-size: 20px;">CVPR2020</a> <a href="/tags/ECCV2018/" style="font-size: 10px;">ECCV2018</a> <a href="/tags/ICCV2019/" style="font-size: 15px;">ICCV2019</a> <a href="/tags/SLR/" style="font-size: 15px;">SLR</a> <a href="/tags/SLT/" style="font-size: 10px;">SLT</a> <a href="/tags/hand-pose-RGB/" style="font-size: 10px;">hand pose RGB</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 15px;">hand pose mesh</a> <a href="/tags/hand-object/" style="font-size: 10px;">hand+object</a> <a href="/tags/others/" style="font-size: 15px;">others</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/">202005042101-CVPR2020-PhotometricH+O</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/">202004080031-ECCV2018-2.5D_heatmap</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/">202004271600-WACV2018IJCV2020-SLP</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/26/202004261703-ARXIV2020-SLT2/">202004261703-ARXIV2020-SLT2</a>
+          </li>
+        
+          <li>
+            <a href="/2020/04/23/202004232043-CVPR2020-SLT/">202004232043-CVPR2020-SLT</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
