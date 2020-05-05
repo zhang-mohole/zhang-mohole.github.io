@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result4.jpeg">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result2.jpeg">
 <meta property="article:published_time" content="2020-05-04T13:01:04.000Z">
-<meta property="article:modified_time" content="2020-05-04T15:04:50.719Z">
+<meta property="article:modified_time" content="2020-05-05T09:34:43.085Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="CVPR2020">
 <meta property="article:tag" content="hand+object">
@@ -138,15 +138,19 @@
 <p>该loss的设计思想是，给一个ref image: I_ref，它带有3d标注，要进行重建的image为I_ref+k。那么在ref+k重建后，将重建得到的vetices投影到image 空间，给每个vertices赋予在image空间上对应点的color值，因为物体和手都是同一个，那么ref+k经过这种投影赋值的结果应该跟ref相应的值一样。把这种想法设计成了一种loss。</p>
 <p>具体步骤（跟整体思想稍有不一样）：</p>
 <ul>
-<li>首先获得ref+k的reconstruction；计算ref到ref+k相应vertices的3d displacement(“flow”)，然后将之投影到image空间（在mesh的可见区域进行插值），这里利用了引文[20]”Neural Renderer”。这样就建立了从ref到ref+k之间的warping flow，即一个矩阵W</li>
+<li>首先获得ref+k的reconstruction；计算ref到ref+k相应vertices的3d displacement(“flow”)，然后将之投影到image空间（在mesh的可见区域进行插值），这里利用了引文[20]”Neural Renderer”。这样就建立了从ref到ref+k之间的warping flow，即一个矩阵W1(ref-&gt;ref+k)。反过来，从ref+k到ref的warping map也可以得到，W2。</li>
 <li>然后利用该W以及一个visible mask来在image上得到loss：<img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/loss-caculate.jpeg" alt="photometric loss"></li>
+<li>visible mask可以通过对ref的mesh进行投影得到。在计算loss时，需要保证参与计算loss的pixel在两个image中都是可见的，所以这里也用了cyclic consistency check方法。该方法先利用W1将refwarp到(ref+k)’，然后再用W2将得到的(ref+k)’再warp回到(ref)’，如果ref和(ref)’之间的差距超过2pixel，则该像素不参与计算（这个比例在实验中非常小）。通过这种手段使得参与loss计算的像素在两帧图像中都是稳定可见的。</li>
 <li>(这个loss的一些细节没有看懂，这里存在两个引文的盲区[20], cyclic consistency check-[14,29])</li>
 </ul>
 <h2 id="expriments-and-results"><a href="#expriments-and-results" class="headerlink" title="expriments and results"></a>expriments and results</h2><p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result1.jpeg" alt="comparing with SOTA"></p>
 <p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result3.jpeg" alt="PCK and weakly supervised"></p>
 <p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result4.jpeg" alt="ablation"></p>
 <p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result2.jpeg" alt="qualitative results"></p>
-<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文总体来说模型框架很简单，但是这个photometric loss是一个很有趣的点，使得任务可以在弱监督下进行。</p>
+<p>论文中对于实现的细节，尤其是该loss的实现细节描述不够，还需要等代码开源后进一步查看。</p>
+<p>文中针对不同数据集上joint定义不同对于hand shape的影响，提出了利用skeleton adaptation layer（就是一个全连接层，用于把mesh vertices回归到joints）替换MANO的joint regression layer。 这一改动的具体细节需要特别关注代码的具体实现。</p>
+<h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
       
     </div>
     <footer class="article-footer">
