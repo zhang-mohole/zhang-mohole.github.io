@@ -64,6 +64,94 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-202005072249-ARXIV2020-BMVC-SLP-transformer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/" class="article-date">
+  <time datetime="2020-05-07T14:50:25.000Z" itemprop="datePublished">2020-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/">202005072249-ARXIV2020_BMVC-SLP_transformer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Progressive-Transformers-for-End-to-End-Sign-Language-Production"><a href="#Progressive-Transformers-for-End-to-End-Sign-Language-Production" class="headerlink" title="Progressive Transformers for End-to-End Sign Language Production"></a>Progressive Transformers for End-to-End Sign Language Production</h1><p><em>note at:</em> 202005072249</p>
+<p><em>labels:</em> SLP</p>
+<p><strong>conf:</strong> maybe BMVC 2020</p>
+<p><strong>author:</strong> Ben Saunders, Necati Cihan Camgoz, and Richard Bowden (University of Surrey)</p>
+<p><strong>no codes available:</strong> </p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/framework.png" alt="framework overview"></p>
+<h2 id="main-contribution"><a href="#main-contribution" class="headerlink" title="main contribution"></a>main contribution</h2><p>本文是第一次把transformer结构用在SLP问题上</p>
+<p>并且，这篇文章非常重要的一点是，在decoder部分提出了一个counter encoding的方式，来解决少量文本词汇生成大量视频帧（这里是pose seq）这一过程中，需要生成多少帧（视频持续时间），什么时候停止这一棘手的问题。这个有点意思。</p>
+<h2 id="method-proposed"><a href="#method-proposed" class="headerlink" title="method proposed"></a>method proposed</h2><p>本文的主体结构基本上就是一个transformer，只有两点稍有不同：</p>
+<ul>
+<li>在decoder部分的输入输出是pose skeleton + counter encoding（即关键点3d坐标+counter encoding）</li>
+<li>在decoder部分的self attention模块和feed forward层之间又加了一层encoder-decoder multi-head attention，用于更好的编码text信息和gloss/pose seq信息的相互关系。</li>
+</ul>
+<p><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/net-architecture.png" alt="network architecture"></p>
+<blockquote>
+<p>network architecture 解释</p>
+</blockquote>
+<p>symbolic embedding就是一个word2vec操作，就是一个简单的MLP/FC层对text或者gloss的one hot编码进行转换，转化到一个向量空间，只不过这里并没有单独训练这个小的网络。</p>
+<p>temporal embedding就是跟BERT里一样的东西，就是一个positional embedding</p>
+<blockquote>
+<p>counter encoding</p>
+</blockquote>
+<p>在生成pose seq的过程，输入输出都是3D pose coordinates，</p>
+<p>3D pose coordinate本质上就是一个向量，跟one hot编码没有大的区别，只不过坐标空间是个连续空间。所以这里的输入输出跟encoder的不同只是离散空间和连续空间的区别，正是这个区别使得decoder在最后不需要进行softmax来获取多分类概率从而得到目标词汇，而是直接回归得到。不过这里也不是把3D pose coordinate直接就输入给transformer了，而是跟前面的symbolic embedding一样，也加了一层embedding把坐标空间进一步转化到一个dense latent space</p>
+<p>最重要的是，这里需要进行一个counter encoding</p>
+<ul>
+<li>counter encoding就是一个标记位置的功能，通过step/N得到一个分数（小数）直接获得一个非常简单的编码</li>
+<li>这个小数恰恰反映了当前生成的pose在整句话所处的位置，也就是说现在生成到整个过程的多少了（进度条）</li>
+<li>同时，也是因为这个counter encoding具有这样的记录位置的功能，那么当它到1的时候，就是整个句子生成结束的时候，所以也就不需要一个特殊的符号或者pose来表示句子结束了。（这个编码确实是非常简单巧妙）<br><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/couter-encoding.png" alt="counter encoding"></li>
+</ul>
+<blockquote>
+<p>GT pose</p>
+</blockquote>
+<p>ground truth pose是通过openpose先获得2d坐标，然后又利用一个现有的方法直接将2d坐标lift到了3d coordinate。具体细节文中没讲，可以再看看引文。<br><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/skeleton-extract.png" alt="3D ground truth skeleton extracting"></p>
+<h2 id="expriments-and-results"><a href="#expriments-and-results" class="headerlink" title="expriments and results"></a>expriments and results</h2><blockquote>
+<p>implementation details</p>
+</blockquote>
+<p>transformer 使用了2层的结构；MHA用了8 head；embedding size=256；利用Xavier initialisation进行初始化，Adam优化器，lr=0.001；基于JoeyNMT tool kit实现<a href="https://github.com/joeynmt/joeynmt" target="_blank" rel="noopener">joeynmt git link</a></p>
+<p>除了生成，作者利用反过来的过程，pose seq-&gt;text（引文6 Camgoz, N.C., Hadfield, S., Koller, O., Bowden, R., Ney, H.: Neural Sign Language Translation.）的方式反向得到text，然后在得到的text上进行评估（BLEU 1-4 score）</p>
+<p><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/result1.png" alt="result"></p>
+<p><img src="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/self-comparing.png" alt="text2poses v.s. text2gloss2poses"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文基本上是把自己想做的给做出来了<del>~</del>，不过还没有生成真正的图片，只是做了text-&gt;pose这一步，但是感觉作者又是在憋大招，这个小工作发一篇小论文，后面继续优化图像生成部分，以后投更高水平的工作，有一定压力了。</p>
+<p>总体来说，本文的复现是可行的，接下来可以进行尝试。</p>
+<p>不过这篇文章也存在明显的不足：</p>
+<ul>
+<li>这样直接生成pose seq，可以肯定最后的效果只是大概很像，但实际上肯定不够精确，毕竟手语对手部和相对位置的要求是很高的，这样的方法也就只能生成一些大致的结果，细节肯定不到位</li>
+<li>对于counter encoding，作者提出了第一种方法，但是这个方法太过简单，只有一个数字来进行编码，在实际使用过程中，回归出来的数字应该不会很好用，尤其是用它来控制生成过程的结束，这一点可以进行改进</li>
+<li>论文中提到counter encoding在inference的时候也是直接给出N的，这就有点说不过去，这相当于直接知道了要生成多少帧，这讲不通。实际上我们关注的是动作，手指细节而不是具体有多少帧</li>
+<li>得到的pose是一种非常稀疏的表示，没有其他手语需要关注的信息输出（如表情）</li>
+</ul>
+<h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://zhang-mohole.github.io/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/" data-id="ck9wyd2sm0000z4fy3k0i9pfl" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SLT/" rel="tag">SLT</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-202005042101-CVPR2020-PhotometricH-O" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/" class="article-date">
@@ -894,56 +982,12 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/03/28/hello-world/" class="article-date">
-  <time datetime="2020-03-28T15:42:36.035Z" itemprop="datePublished">2020-03-28</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/28/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zhang-mohole.github.io/2020/03/28/hello-world/" data-id="ck95mfta90002onfy0sexa3l0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+  </nav>
 
 </section>
         
@@ -966,7 +1010,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/CVPR2020/" style="font-size: 20px;">CVPR2020</a> <a href="/tags/ECCV2018/" style="font-size: 10px;">ECCV2018</a> <a href="/tags/ICCV2019/" style="font-size: 15px;">ICCV2019</a> <a href="/tags/SLR/" style="font-size: 15px;">SLR</a> <a href="/tags/SLT/" style="font-size: 10px;">SLT</a> <a href="/tags/hand-pose-RGB/" style="font-size: 10px;">hand pose RGB</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 15px;">hand pose mesh</a> <a href="/tags/hand-object/" style="font-size: 10px;">hand+object</a> <a href="/tags/others/" style="font-size: 15px;">others</a>
+      <a href="/tags/CVPR2020/" style="font-size: 20px;">CVPR2020</a> <a href="/tags/ECCV2018/" style="font-size: 10px;">ECCV2018</a> <a href="/tags/ICCV2019/" style="font-size: 15px;">ICCV2019</a> <a href="/tags/SLR/" style="font-size: 15px;">SLR</a> <a href="/tags/SLT/" style="font-size: 15px;">SLT</a> <a href="/tags/hand-pose-RGB/" style="font-size: 10px;">hand pose RGB</a> <a href="/tags/hand-pose-depth/" style="font-size: 10px;">hand pose depth</a> <a href="/tags/hand-pose-mesh/" style="font-size: 15px;">hand pose mesh</a> <a href="/tags/hand-object/" style="font-size: 10px;">hand+object</a> <a href="/tags/others/" style="font-size: 15px;">others</a>
     </div>
   </div>
 
@@ -988,6 +1032,10 @@
       <ul>
         
           <li>
+            <a href="/2020/05/07/202005072249-ARXIV2020-BMVC-SLP-transformer/">202005072249-ARXIV2020_BMVC-SLP_transformer</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/">202005042101-CVPR2020-PhotometricH+O</a>
           </li>
         
@@ -1001,10 +1049,6 @@
         
           <li>
             <a href="/2020/04/26/202004261703-ARXIV2020-SLT2/">202004261703-ARXIV2020-SLT2</a>
-          </li>
-        
-          <li>
-            <a href="/2020/04/23/202004232043-CVPR2020-SLT/">202004232043-CVPR2020-SLT</a>
           </li>
         
       </ul>
