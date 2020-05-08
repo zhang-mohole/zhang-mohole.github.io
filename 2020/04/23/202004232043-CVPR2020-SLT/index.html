@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhang-mohole.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translationnote at: 202004232043 labels: SLT conf: CVPR 2020 author: Necati Cihan Camgoz, Oscar Koller codes available at: cod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="202004232043-CVPR2020-SLT">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translationnote at: 202004232043 labels: SLT conf: CVPR 2020 author: Necati Cihan Camgoz, Oscar Koller codes available at: cod">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/method.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/result1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/result2.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/result3.png">
+<meta property="article:published_time" content="2020-04-23T12:43:37.000Z">
+<meta property="article:modified_time" content="2020-04-25T13:54:21.069Z">
+<meta property="article:author" content="Mohole Zhang">
+<meta property="article:tag" content="CVPR2020">
+<meta property="article:tag" content="SLR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/framework.png">
+
+<link rel="canonical" href="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>202004232043-CVPR2020-SLT | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-hans">
+    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/04/23/202004232043-CVPR2020-SLT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mohole Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          202004232043-CVPR2020-SLT
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-23 20:43:37" itemprop="dateCreated datePublished" datetime="2020-04-23T20:43:37+08:00">2020-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-25 21:54:21" itemprop="dateModified" datetime="2020-04-25T21:54:21+08:00">2020-04-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Sign-Language-Transformers-Joint-End-to-end-Sign-Language-Recognition-and-Translation"><a href="#Sign-Language-Transformers-Joint-End-to-end-Sign-Language-Recognition-and-Translation" class="headerlink" title="Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translation"></a>Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translation</h1><p><em>note at:</em> 202004232043</p>
+<p><em>labels:</em> SLT</p>
+<p><strong>conf:</strong> CVPR 2020</p>
+<p><strong>author:</strong> Necati Cihan Camgoz, Oscar Koller</p>
+<p><strong>codes available at:</strong> <a href="https://github.com/neccam/slt" target="_blank" rel="noopener">code link</a></p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/23/202004232043-CVPR2020-SLT/framework.png" alt="framework overview"></p>
+<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><blockquote>
+<p>motivation</p>
+</blockquote>
+<p>本文的主要目的是希望通过end2end的方式，直接进行从sign language到自然语言text的手语翻译，同时利用中间态gloss标注作为中间监督，从而使得不会出现sign2gloss2text这种在gloss这里的瓶颈。</p>
+<blockquote>
+<p>problems</p>
+</blockquote>
+<ul>
+<li>之前的大部分工作都是做CSLR任务，默认sign video跟text之间是一一对应的，没有复杂的语序等问题</li>
+<li>之前的SLT工作利用了gloss中间态监督信息，但是其分步骤进行翻译的结构使得在得到gloss后形成了一个瓶颈，内在的失去了一些视频中的信息</li>
+<li>手语本身也存在着难以理解的内在复杂性。手语是个集多种信息于一体的语言，在视频中不止有手，包括动作，头，身体，表情等等都是信息的携带点。此外，手语也是一种语言，跟spoken language一样，也是有自己的语法和词汇的，所以默认两者之间存在着简单的直接映射是不合理的。</li>
+</ul>
+<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
+<p>手语处理流程</p>
+</blockquote>
+<ul>
+<li>视觉信息理解<ul>
+<li>这里，是个很重要的环节。在sign2text的模型中，缺少sign2gloss过程，这就相当于直接把视频翻译成自然语言，跨过了对视频的直接理解监督，这种模型的表现普遍不如利用了gloss的。而利用gloss则是相当于在中间加入了中间层监督，这样就可以更好的控制模型对输入视频的正确理解过程。</li>
+</ul>
+</li>
+<li>视觉信息到自然语言的映射</li>
+</ul>
+<blockquote>
+<p>method details</p>
+</blockquote>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/method.png" alt="method framework for single layer"></p>
+<p>整个网络分为三个部分：</p>
+<ul>
+<li>SLRT(Sign Language Recognition Transformers)<ul>
+<li>整个网络框架是利用了BERT的结构，整个思路也基本上是一样的，只是输入信息不同。（BERT模型需要另做学习，这里留一个链接坑位吧<a href="？？">BERT 学习笔记</a>）<a href="https://github.com/codertimo/BERT-pytorch" target="_blank" rel="noopener">pytorch implement of BERT</a></li>
+<li>input：视频编码——利用CNN提取视频帧的feature。（这里是重要的改进点！！！）</li>
+<li>position embedding：同样是bert模型中的东西，因为基于transformer的模型的并行性，不像RNN那样有着天然的时序信息，这里通过position embedding来对时序进行建模。</li>
+<li>后面又通过self attention来进一步加强了输入视频帧各帧feature之间的语义关系（这里可能是已经能够建模前后帧之间的关系了，如果想在这里加强上下文信息关系，需要好好思考如何进行改进，这个地方更像是纯粹的NLP问题，如果有好的方式，在其他NLP领域应该也会很有用）</li>
+<li>后面经过了feed forward之后又经过了FC（linear）然后softmax算概率，最后送到CTC模块来从frame level到gloss level</li>
+</ul>
+</li>
+<li>CTC<ul>
+<li>这个模块具体内容需要更进一步学习，包括看相关代码，在NLP任务中很重要</li>
+<li>CTC算法的详细讲解博客：<a href="https://xiaodu.io/ctc-explained/" target="_blank" rel="noopener">CTC 算法解析 part1</a>，<a href="https://xiaodu.io/ctc-explained-part2/" target="_blank" rel="noopener">CTC 算法解析 part2</a>; 百度CTC loss工具包：<a href="https://github.com/baidu-research/warp-ctc" target="_blank" rel="noopener">warp-ctc</a>；<a href="https://github.com/SeanNaren/warp-ctc" target="_blank" rel="noopener">another pytorch implement</a></li>
+</ul>
+</li>
+<li>SLTT(Sign Language Translation Transformers)<ul>
+<li>这个相当于是decoder，跟bert模型完全一样的</li>
+</ul>
+</li>
+</ul>
+<h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><blockquote>
+<p>results</p>
+</blockquote>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result1.png" alt="result1"></p>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result2.png" alt="result2"></p>
+<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result3.png" alt="result3"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文总体来说算是第一次正经的好好解决了SLT的问题，虽然两年前的nslt算是开山之作，但是当时的方法很直接，也很粗暴，相当于是CSLR+NMT的简单使用，并没有做的更细致。而这一篇工作就算是SLT应该有的处理方式了，通过CNN提取视频特征，通过跟视频时序逐次对应的gloss来作为视频理解的中间监督，通过CTC来解决视频维度远大于gloss词维度的问题，然后利用更新的NMT中基于BERT的网络框架来处理翻译任务。</p>
+<p>算是一个很不错的baseline，直观简单，但是确实应该这么做。后面应该还有很大改进的空间，需要在视频理解这里花一些功夫。还有就是视频特征是否可以进行更稀疏的处理，减少不必要的冗余信息。</p>
+<h2 id="references-must-be-checked"><a href="#references-must-be-checked" class="headerlink" title="references must be checked!"></a>references must be checked!</h2><ul>
+<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Sign Language Production using Neural Machine Translation and Generative Adversarial Networks.</em> In Proceedings of the British Machine Vision Conference (BMVC), 2018.</li>
+<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Text2Sign: Towards Sign Language Pro- duction using Neural Machine Translation and Generative Adversarial Networks.</em> International Journal of Computer Vision (IJCV), 2020.</li>
+<li>Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko- reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. <em>Attention is All You Need.</em> In Proceedings of the Advances in Neural Information Processing Systems (NIPS), 2017.</li>
+</ul>
+<h2 id="inspirations"><a href="#inspirations" class="headerlink" title="inspirations"></a>inspirations</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CVPR2020/" rel="tag"># CVPR2020</a>
+              <a href="/tags/SLR/" rel="tag"># SLR</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/" rel="prev" title="202004221543-CVPR2020-MusicGesture">
+      <i class="fa fa-chevron-left"></i> 202004221543-CVPR2020-MusicGesture
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/26/202004261703-ARXIV2020-SLT2/" rel="next" title="202004261703-ARXIV2020-SLT2">
+      202004261703-ARXIV2020-SLT2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Sign-Language-Transformers-Joint-End-to-end-Sign-Language-Recognition-and-Translation"><span class="nav-number">1.</span> <span class="nav-text">Sign Language Transformers:Joint End-to-end Sign Language Recognition and Translation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problems-to-be-solved"><span class="nav-number">1.2.</span> <span class="nav-text">problems to be solved</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">methods proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiments-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiments and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references-must-be-checked"><span class="nav-number">1.6.</span> <span class="nav-text">references must be checked!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inspirations"><span class="nav-number">1.7.</span> <span class="nav-text">inspirations</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mohole Zhang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Mohole Zhang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mohole Zhang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
