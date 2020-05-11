@@ -33,8 +33,13 @@
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/bmvc-gloss-representation.jpeg">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/bmvc-encoder-decoder.png">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/bmvc-loss.jpeg">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-motion-graph.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-GAN.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-result1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-result2.png">
 <meta property="article:published_time" content="2020-04-27T08:00:23.000Z">
-<meta property="article:modified_time" content="2020-05-08T05:42:26.147Z">
+<meta property="article:modified_time" content="2020-05-11T16:05:47.861Z">
 <meta property="article:author" content="Mohole Zhang">
 <meta property="article:tag" content="SLT">
 <meta name="twitter:card" content="summary">
@@ -196,7 +201,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:26" itemprop="dateModified" datetime="2020-05-08T13:42:26+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:05:47" itemprop="dateModified" datetime="2020-05-12T00:05:47+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,6 +229,7 @@
 <p><strong>conf:</strong> BMVC 2020</p>
 <p><strong>author:</strong> Stephanie Stoll, Necati Cihan Camgoz, (Centre for Vision, Speech and Signal Processing University of Surrey)</p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/bmvc-framework.png" alt="first NN based SLP framework"></p>
+<a id="more"></a>
 <h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
 <li>之前SLP相关的工作大多是基于avatar的</li>
 <li>一种方式是利用motion capture data来驱动avatar做出相应的动作，这种方式需要建立一个pre-recorded phrases相应的动作驱动表示，这种基于motion capture的方式的代价很高</li>
@@ -281,12 +287,47 @@
 <li>再者，在gloss到pose sequence这一步，作者给出的方法是给一个lookup table来进行mapping，这里方法部分介绍的不多，但从其中的意思可以看出是用一个从GT skeletal中计算得到的向量来做key，从而在得到一个loss后利用这样一种representation来进行映射得到pose sequence。首先这种预定义的库的确是一种可行的思路，但是这种思路确实是很strate forward，应该有更好的可以end2end的方法。</li>
 </ul>
 <h2 id="available-datasets"><a href="#available-datasets" class="headerlink" title="available datasets"></a>available datasets</h2><p>the SMILE Sign Language Assessment Dataset: Smile swiss german sign language dataset, 02 2018.(去官方网页看并没有一个下载链接，连数据都看不到，可以发邮件问问)</p>
-<h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2><h1 id="Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks"><a href="#Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks" class="headerlink" title="Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks"></a>Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks</h1><p><em>note at:</em> 202001121635</p>
+<h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2><h1 id="Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks"><a href="#Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks" class="headerlink" title="Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks"></a>Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks</h1><p><em>note at:</em> 202005112307</p>
 <p><em>labels:</em> SLP</p>
 <p><strong>journal:</strong> IJCV 2020</p>
 <p><strong>author:</strong> Stephanie Stoll , Necati Cihan Camgoz</p>
-<p><strong>codes available at:</strong> <a href="https://github.com/3d-hand-shape/hand-graph-cnn" target="_blank" rel="noopener">code link</a></p>
-<h2 id="framework-1"><a href="#framework-1" class="headerlink" title="framework"></a>framework</h2><h2 id="problems-to-be-solved-1"><a href="#problems-to-be-solved-1" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><h2 id="methods-proposed-1"><a href="#methods-proposed-1" class="headerlink" title="methods proposed"></a>methods proposed</h2><h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><h2 id="discussions-1"><a href="#discussions-1" class="headerlink" title="discussions"></a>discussions</h2><h2 id="available-datasets-1"><a href="#available-datasets-1" class="headerlink" title="available datasets"></a>available datasets</h2><h2 id="some-inspirations-1"><a href="#some-inspirations-1" class="headerlink" title="some inspirations"></a>some inspirations</h2>
+<p><strong>no codes available</strong></p>
+<h2 id="framework-1"><a href="#framework-1" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-framework.png" alt="IJCV 2020 SLP framework"></p>
+<h2 id="methods-proposed-1"><a href="#methods-proposed-1" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文是在上面BMVC2018那篇工作的基础上进行了更深入的研究得到的工作，总体上来说比BMVC那篇更为科学，也更系统完整。</p>
+<blockquote>
+<p>method 概览</p>
+</blockquote>
+<p>主体过程仍然是 text-&gt;gloss-&gt;pose seq-&gt;video<br>不过跟BMVC那篇不同的是，gloss-&gt;pose seq这个过程，不再是一个简单的map table,而是建立了一个motion graph，这个是本文的关键创新点。pose seq-&gt;video 这个过程在具体方法上也有所改变，但是这里的创新相对不大，主要是利用了18年（本文投稿的时候）的pix2pixHD网络替换了BMVC那篇中自己搭建的baseline网络。</p>
+<p>本文主要流程是，</p>
+<ul>
+<li>1、利用encoder-decoder-luong attention的NMT网络实现text2gloss；</li>
+<li>2、在gloss的概率空间上建立motion graph（MG），MG的节点是包含了一系列原始motion pose(s)的数据，这个可以看做是先验概率p(x_i)，而MG的边代表从前一个顶点到下一个顶点的后验概率p(x_j | x_i), NMT decoder的输出可以看做这里的后验概率p(x_j | x_i), 这中间还会有个Y_ij的过程，这个就是在两个motion之间进行smoothing 插值，使得前一个节点到下一个节点的motion不会出现肉眼可见的跳跃；</li>
+<li>3、有了pose seq，利用pix2pixHD网络即可获得跟目标pose一致的图像输出</li>
+</ul>
+<blockquote>
+<p>method details</p>
+</blockquote>
+<h3 id="text-gt-gloss"><a href="#text-gt-gloss" class="headerlink" title="text-&gt;gloss"></a>text-&gt;gloss</h3><p>这里利用了一个GRU + luong attention的结构，encoder decoder都是4层单向GRU，都有一个embedding layer,decoder在最后有个projection layer<br>（这里，对于decoder的具体输出，还需要进一步深入解读，是获得了gloss还是仅用gloss作为训练时的监督信号，实际上不需要进行softmax来进行到gloss的映射而是仅通过projection layer获得gloss概率）</p>
+<h3 id="motion-graph-text-gt-pose-seq"><a href="#motion-graph-text-gt-pose-seq" class="headerlink" title="motion graph (text-&gt;pose seq)"></a>motion graph (text-&gt;pose seq)</h3><p>这个地方，motion graph的建立是一个重难点</p>
+<p>主要是graph节点的建立。</p>
+<ul>
+<li>节点建立<ul>
+<li>首先要提取视频中的pose，然后利用一定的算法找到视频中的关键帧，利用关键帧把视频分割成gloss，而其他帧的pose跟所属gloss一起作为原始动作（motion primitives），即一个节点</li>
+<li>这里，具体的算法作者并没有给出，可以发邮件问一问</li>
+</ul>
+</li>
+<li>有向边建立<ul>
+<li>有向边的理论意义就如上文，就是一个从x_i到x_j的转化概率，类似马尔科夫随机场，从一个状态到另一个状态的变换。这里用后验概率p(x_j | x_i)来表示。</li>
+<li>在实际建模中，作者利用NMT网络中decoder当前时刻t的输出概率作为p(x_t | x_t-1)，从而得到有向图的边。</li>
+<li>有了节点和节点之间的边的建模，也就有了MG。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-motion-graph.png" alt="motion graph"></p>
+<h3 id="pose-gt-image"><a href="#pose-gt-image" class="headerlink" title="pose-&gt;image"></a>pose-&gt;image</h3><p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-GAN.png" alt="GAN based pose2image generation"></p>
+<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-result1.png" alt="result1"></p>
+<p><img src="/2020/04/27/202004271600-BMVC2018IJCV2020-SLP/ijcv-result2.png" alt="result2"></p>
+<h2 id="discussions-1"><a href="#discussions-1" class="headerlink" title="discussions"></a>discussions</h2><h2 id="available-datasets-1"><a href="#available-datasets-1" class="headerlink" title="available datasets"></a>available datasets</h2><h2 id="some-inspirations-1"><a href="#some-inspirations-1" class="headerlink" title="some inspirations"></a>some inspirations</h2>
     </div>
 
     
@@ -370,7 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SignLanguage-Production-Using-Neural-Machine-Translation-And-Generative-Adervsarial-Networks"><span class="nav-number">1.</span> <span class="nav-text">SignLanguage Production Using Neural Machine Translation And Generative Adervsarial Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problems-to-be-solved"><span class="nav-number">1.2.</span> <span class="nav-text">problems to be solved</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">methods proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussions"><span class="nav-number">1.4.</span> <span class="nav-text">discussions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#available-datasets"><span class="nav-number">1.5.</span> <span class="nav-text">available datasets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-inspirations"><span class="nav-number">1.6.</span> <span class="nav-text">some inspirations</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks"><span class="nav-number">2.</span> <span class="nav-text">Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework-1"><span class="nav-number">2.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problems-to-be-solved-1"><span class="nav-number">2.2.</span> <span class="nav-text">problems to be solved</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed-1"><span class="nav-number">2.3.</span> <span class="nav-text">methods proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#results"><span class="nav-number">2.4.</span> <span class="nav-text">results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussions-1"><span class="nav-number">2.5.</span> <span class="nav-text">discussions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#available-datasets-1"><span class="nav-number">2.6.</span> <span class="nav-text">available datasets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-inspirations-1"><span class="nav-number">2.7.</span> <span class="nav-text">some inspirations</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SignLanguage-Production-Using-Neural-Machine-Translation-And-Generative-Adervsarial-Networks"><span class="nav-number">1.</span> <span class="nav-text">SignLanguage Production Using Neural Machine Translation And Generative Adervsarial Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problems-to-be-solved"><span class="nav-number">1.2.</span> <span class="nav-text">problems to be solved</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">methods proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussions"><span class="nav-number">1.4.</span> <span class="nav-text">discussions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#available-datasets"><span class="nav-number">1.5.</span> <span class="nav-text">available datasets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-inspirations"><span class="nav-number">1.6.</span> <span class="nav-text">some inspirations</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Text2Sign-Towards-Sign-Language-Production-Using-Neural-Machine-Translation-and-Generative-Adversarial-Networks"><span class="nav-number">2.</span> <span class="nav-text">Text2Sign: Towards Sign Language Production Using Neural Machine Translation and Generative Adversarial Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework-1"><span class="nav-number">2.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed-1"><span class="nav-number">2.2.</span> <span class="nav-text">methods proposed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#text-gt-gloss"><span class="nav-number">2.2.1.</span> <span class="nav-text">text-&gt;gloss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#motion-graph-text-gt-pose-seq"><span class="nav-number">2.2.2.</span> <span class="nav-text">motion graph (text-&gt;pose seq)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pose-gt-image"><span class="nav-number">2.2.3.</span> <span class="nav-text">pose-&gt;image</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#results"><span class="nav-number">2.3.</span> <span class="nav-text">results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussions-1"><span class="nav-number">2.4.</span> <span class="nav-text">discussions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#available-datasets-1"><span class="nav-number">2.5.</span> <span class="nav-text">available datasets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-inspirations-1"><span class="nav-number">2.6.</span> <span class="nav-text">some inspirations</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
