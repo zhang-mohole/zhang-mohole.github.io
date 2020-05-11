@@ -366,7 +366,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:15" itemprop="dateModified" datetime="2020-05-08T13:42:15+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:10:29" itemprop="dateModified" datetime="2020-05-12T00:10:29+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -394,52 +394,14 @@
 <p><strong>author:</strong> Yana Hasson</p>
 <p><strong>codes available at:</strong> <a href="https://hassony2.github.io/handobjectconsist" target="_blank" rel="noopener">code link</a>(on the way…)</p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/framework.jpeg" alt="framework"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
-<li>手跟物体交互场景下手跟物体的互遮挡现象严重</li>
-<li>3d数据标注成本非常高，当前数据集在该任务上难以做全监督的学习<ul>
-<li>motion capture datasets:虽然可以提供大量具有精确标注的训练样本，但是这些数据只能在特定条件下采集，并且会有可见的传感器之类的东西，这些出现在rgb image中会影响模型</li>
-<li>multi-view setups:虽然可以通过multiview来获得3d信息，但是这种数据也是对场景（采集条件）有特定要求</li>
-<li>synthetic datasets:虽然是一种方法，但是目前而言，合成数据仍然存在domain gap的问题</li>
-<li>手工标注以及optimization-based方式:太费时间</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>motivation</p>
-</blockquote>
-<p>基于以上问题，本文提出了一种新的思路：利用视频数据在时间维度上的光度测量一致性(photometric consistency)，在数据集中只有少量子数据集有3d标注时可以进行从single RGB到hand and object基于弱监督（自监督）的重建。</p>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文在主体框架上思路比较简单，就是一个encoder对图像进行特征提取，然后利用提取到的特征进行hand的pose+shape参数回归（基于MANO模型）以及object的6d pose回归</p>
-<blockquote>
-<p>reconstruction</p>
-</blockquote>
-<p>网络结构即上文中的框架，利用了非常简单的ResNet-18作为encoder(除去最后一层分类层)提取图像特征<br>接下来decoder部分分为三个部分：</p>
-<ul>
-<li>MANO based hand reconstruction，目标是获得28维MANO参数(3 global rotation,15 pose, 10 shape)</li>
-<li>object的6d pose estimation。 mesh已知，目标是获得6维object pose参数</li>
-<li>global hand translation参数回归。目标是获得3维全局转换向量，用于得到点在世界坐标系中的坐标。</li>
-<li><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/decoder.jpeg" alt="decoder net details"></li>
-<li>数据处理上，作者利用了一种基于相机焦距的normalize方法：<img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/focal-normalize.jpeg" alt="focal normalize">，在已知这里的d_f, (t_u, t_v)以及相机内参后，可以得到global translation。（这里还有一个global rotation，论文只有一句话，没看明白是要干什么？）</li>
-</ul>
-<blockquote>
-<p>photometric consistency loss</p>
-</blockquote>
-<p>本文中作者最核心的创新在于提出的photometric consistency loss，并利用该loss在该任务上进行了自监督学习。<br><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/photometric-loss.jpeg" alt="photometric consistency loss"></p>
-<p>该loss的设计思想是，给一个ref image: I_ref，它带有3d标注，要进行重建的image为I_ref+k。那么在ref+k重建后，将重建得到的vetices投影到image 空间，给每个vertices赋予在image空间上对应点的color值，因为物体和手都是同一个，那么ref+k经过这种投影赋值的结果应该跟ref相应的值一样。把这种想法设计成了一种loss。</p>
-<p>具体步骤（跟整体思想稍有不一样）：</p>
-<ul>
-<li>首先获得ref+k的reconstruction；计算ref到ref+k相应vertices的3d displacement(“flow”)，然后将之投影到image空间（在mesh的可见区域进行插值），这里利用了引文[20]”Neural Renderer”。这样就建立了从ref到ref+k之间的warping flow，即一个矩阵W1(ref-&gt;ref+k)。反过来，从ref+k到ref的warping map也可以得到，W2。</li>
-<li>然后利用该W以及一个visible mask来在image上得到loss：<img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/loss-caculate.jpeg" alt="photometric loss"></li>
-<li>visible mask可以通过对ref的mesh进行投影得到。在计算loss时，需要保证参与计算loss的pixel在两个image中都是可见的，所以这里也用了cyclic consistency check方法。该方法先利用W1将refwarp到(ref+k)’，然后再用W2将得到的(ref+k)’再warp回到(ref)’，如果ref和(ref)’之间的差距超过2pixel，则该像素不参与计算（这个比例在实验中非常小）。通过这种手段使得参与loss计算的像素在两帧图像中都是稳定可见的。</li>
-<li>(这个loss的一些细节没有看懂，这里存在两个引文的盲区[20], cyclic consistency check-[14,29])</li>
-</ul>
-<h2 id="expriments-and-results"><a href="#expriments-and-results" class="headerlink" title="expriments and results"></a>expriments and results</h2><p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result1.jpeg" alt="comparing with SOTA"></p>
-<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result3.jpeg" alt="PCK and weakly supervised"></p>
-<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result4.jpeg" alt="ablation"></p>
-<p><img src="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/result2.jpeg" alt="qualitative results"></p>
-<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文总体来说模型框架很简单，但是这个photometric loss是一个很有趣的点，使得任务可以在弱监督下进行。</p>
-<p>论文中对于实现的细节，尤其是该loss的实现细节描述不够，还需要等代码开源后进一步查看。</p>
-<p>文中针对不同数据集上joint定义不同对于hand shape的影响，提出了利用skeleton adaptation layer（就是一个全连接层，用于把mesh vertices回归到joints）替换MANO的joint regression layer。 这一改动的具体细节需要特别关注代码的具体实现。</p>
-<h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/04/202005042101-CVPR2020-PhotometricH-O/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -489,7 +451,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:43:19" itemprop="dateModified" datetime="2020-05-08T13:43:19+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:08:18" itemprop="dateModified" datetime="2020-05-12T00:08:18+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -517,48 +479,14 @@
 <p><strong>conf:</strong> ECCV 2018</p>
 <p><strong>author:</strong> Umar Iqbal, Pavlo Molchanov, Thomas Breuel Juergen Gall, Jan Kautz</p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/framework.png" alt="framework"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
-<li>single RGB -&gt; 3d hand pose的工作不多。从2d图像到3d pose，缺乏深度信息和scale信息，是一个ill-posed task，之前的方法要么无法解决，要么是在特定情境的数据下过拟合。</li>
-<li>制作一个大规模的多场景数据集是难以行得通的。</li>
-<li>之前的方法需要有一些前置假设，如palm的坐标已知，hand scale已知；要么就是只能得到一个大概的结果。</li>
-</ul>
-<h3 id="motivation"><a href="#motivation" class="headerlink" title="motivation"></a>motivation</h3><p>利用可学习的方式将RGB image编码到2.5D（2d heatmap + depth map），进而得到3D pose。利用2.5D表示，同时解决掉尺度不变性和平移不变性（scale and translation invariant）——这里的2.5D，本质上就是一个RGB+depth的表示嘛。</p>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文最重要的工作在两个点上</p>
-<ul>
-<li>2.5D heatmap的定义</li>
-<li>2.5D heatmap的获得</li>
-</ul>
-<p>2.5D heatmap定义：</p>
-<p>主要目标在于利用一种有着2d heatmap的紧凑性（节约计算量）和3d heatmap的语义性的heatmap表示。既能方便表达位置信息，又能便于计算。</p>
-<p>K个关键点的2.5D heatmap由2K个h*w的heatmap组成，其中K个就是uv空间的2d joints hm，剩下K个则代表深度上的数值。</p>
-<ul>
-<li>2d 部分跟之前工作中用到的一样，表示了joints在uv空间的位置信息</li>
-<li>depth的表示，这里采用的是相对于root joint的相对深度，那么在绝对空间中的深度是depth_root + depth_r，这里的depth hm上仅存储depth_r。</li>
-<li>对于depth，还进行了normalization，从而保证了这个2.5D表示的平移不变性和尺度不变性:<img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/normalization.png" alt="normalization"></li>
-<li>这里的s（scale）在2.5D恢复到相机空间3d pose时需要，如果已知就直接用，如果这个量不知道时:<img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/scale.png" alt="scale"></li>
-</ul>
-<p>2.5D 到 3D pose</p>
-<p>有了上述2.5D表示，可以很方便的获得uv坐标和depth_r，给出depth_root之后，利用相机参数即可恢复出在相机空间中的3d坐标。</p>
-<p>2.5D heatmap的获得</p>
-<p>有两种方式：<br>1、通过一种很直接的方式；2、通过可学习的方式来获得adaptive latent 2.5D heatmap。</p>
-<p>直接方式：</p>
-<ul>
-<li>对于2d heatmap，跟经典方法一样，直接通过高斯分布获得K个h*w的heatmap H_2d</li>
-<li>对于depth heatmap，直接用H_2d点乘相应joint的GT depth_r</li>
-</ul>
-<p>直接方式有一些缺点：1、对于2d heatmap，在手势中，每个joint产生的热力区域都是一样的，但实际上不同位置对于热力区域大小的需要不同，手掌更大，手指则应该更小。这种语义并没有在直接方式中获得；2、depth heatmap则有更大的问题，直接点乘H_2d，相当于直接利用了高斯分布，但是高斯分布是非常陡峭的，而实际上手的深度变化不会那么大，如手掌区域的depth值实际上差别很小，直接方式会破坏这种语义。</p>
-<p>基于以上缺点，作者提出了：</p>
-<p>Latent 2.5D Heatmap Regression:</p>
-<ul>
-<li>利用一个CNN来编码获得2K个hm，分别是2d和depth heatmap，然后再对他们分别进行处理获得所需要的2.5D heatmap。</li>
-<li>对于2d heatmap，利用空间softmax把heatmap上的值进行概率化，同时加入科学系参数β来自适应的学习每个关节的热力区域大小的权重，从而得到概率矩阵，利用该概率矩阵可以进一步得到joint的2d坐标：<img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/latent2dhm.png" alt="latent2dhm"></li>
-<li>对于depth heatmap，利用刚才上一步得到的概率矩阵跟CNN得到的depth map进行哈德马乘，所得即为depth_r:<img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/latent_depth_hm.png" alt="latent_depth_hm"></li>
-<li>通过这种方式，整个过程是可导的，所以可以通过学习方式获得2.5D heatmap的编码，同时还能解决上面直接编码的不足之处。</li>
-</ul>
-<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><p>ablation result:<br><img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/ablation.png" alt="ablation"></p>
-<p>Comparison with the state-of-the-art:<br><img src="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/sota-compare.png" alt="compare with SOTA"></p>
-<h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><p>直接利用2d来lifting的方式效果是比较一般的，这篇文章这种2.5D heatmap的方法一定程度上更充分的利用了2d heatmap的优势，是一个有趣的思路，不过其性能应该也不会特别好。</p>
-<h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/29/202004080031-ECCV2018-2-5D-heatmap/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -693,7 +621,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:35" itemprop="dateModified" datetime="2020-05-08T13:42:35+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:10:03" itemprop="dateModified" datetime="2020-05-12T00:10:03+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -722,43 +650,14 @@
 <p><strong>author:</strong> Kayo Yin,École Polytechnique</p>
 <p><strong>codes available at:</strong> <a href="https://github.com/kayoyin/transformer-slt" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/26/202004261703-ARXIV2020-SLT2/framework.png" alt="framework overview"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><p>这篇文章提出，机器翻译在各种自然语言之间发展的不错了，也得到了很多的关注，但是在手语翻译方面目前的研究还很少。虽然之前有SLR，CSLR的工作，但是手语到对应的自然语言之间并不是简单的逐词识别问题，而是各有自己的语言规则和语法。CSLR只解决了手语视频到每个词的直接意思的理解，即sign2gloss这个过程，但是对于sign2text，CLSR是不能胜任的。</p>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文作者关注的不是从sign video到text的任务，而是gloss2text这个方面，也就是说本文其实只是把其他NMT的方法直接搬到了手语的gloss上，进而做出了gloss2text这一过程。至于sign2text任务，本文没有提出新的方法，仍然利用了2018年CVPR那篇文章中的思路，直接使用一个SOTA的CSLR模型来获得sign2gloss，再把得到的gloss送进本文的transformer模型中得到最终的text。</p>
-<p>总体来说创新性不大，算是复习一遍BERT模型。</p>
-<blockquote>
-<p>BERT模型简介</p>
-</blockquote>
-<ul>
-<li><p>encoder</p>
-<ul>
-<li>encoder和decoder在transformer based模型中都是stack了好几层，每层内部都一样，多层的结构是为了更好的理解输入信息。</li>
-<li>每一个单层encoder中对于输入的embedding，先经过一个multi-head self attention。这里self attention的作用是为了获得输入信息的时序依赖关系，从而弥补网络结构不像RNN based和1d CNN based模型那种天然的时序信息。</li>
-<li>过了self attention之后跟residual连接的数据add后再经过一个layer norm</li>
-<li>然后送进linear layer based feed forward，同样这里也有residual link，然后也经过layer norm</li>
-<li>接下来就是下一个encoder stack，后面跟上面一样</li>
-</ul>
-</li>
-<li><p>multi-head self attention</p>
-<ul>
-<li>这里的注意力机制同样是三个输入Q(n x k),K(n x k),V(n x v),他们都是通过简单的FC网络获得的feature</li>
-<li><img src="/2020/04/26/202004261703-ARXIV2020-SLT2/self-attention.jpeg" alt="multi-head self attention"></li>
-</ul>
-</li>
-<li><p>decoder</p>
-<ul>
-<li>decoder跟encoder基本上是对称的结构，但是其第一个stack的attention模块是mask attention，如在解码第t个step的数据时，t后面step的sentence输入信息都需要被mask，第一个stack的输入是上一个step得到的输出。</li>
-<li>后面所有的attention模块输入都是从encoder输出的feature+上一层的输出</li>
-</ul>
-</li>
-<li><p>position encoding</p>
-<ul>
-<li>无论encoder还是decoder，其输入embedding都不是原始的word embedding，而是经过position embedding操作后的</li>
-<li>这里position encoding操作仍然是因为self attention对于输入没有时间前后的概念，所以这里通过人为的编码，使得输入单词embedding的相对位置在编码中得到体现。</li>
-<li><img src="/2020/04/26/202004261703-ARXIV2020-SLT2/position-encoding.png" alt="position encoding"></li>
-</ul>
-</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/26/202004261703-ARXIV2020-SLT2/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -808,7 +707,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:44" itemprop="dateModified" datetime="2020-05-08T13:42:44+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:09:53" itemprop="dateModified" datetime="2020-05-12T00:09:53+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -837,66 +736,14 @@
 <p><strong>author:</strong> Necati Cihan Camgoz, Oscar Koller</p>
 <p><strong>codes available at:</strong> <a href="https://github.com/neccam/slt" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/23/202004232043-CVPR2020-SLT/framework.png" alt="framework overview"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><blockquote>
-<p>motivation</p>
-</blockquote>
-<p>本文的主要目的是希望通过end2end的方式，直接进行从sign language到自然语言text的手语翻译，同时利用中间态gloss标注作为中间监督，从而使得不会出现sign2gloss2text这种在gloss这里的瓶颈。</p>
-<blockquote>
-<p>problems</p>
-</blockquote>
-<ul>
-<li>之前的大部分工作都是做CSLR任务，默认sign video跟text之间是一一对应的，没有复杂的语序等问题</li>
-<li>之前的SLT工作利用了gloss中间态监督信息，但是其分步骤进行翻译的结构使得在得到gloss后形成了一个瓶颈，内在的失去了一些视频中的信息</li>
-<li>手语本身也存在着难以理解的内在复杂性。手语是个集多种信息于一体的语言，在视频中不止有手，包括动作，头，身体，表情等等都是信息的携带点。此外，手语也是一种语言，跟spoken language一样，也是有自己的语法和词汇的，所以默认两者之间存在着简单的直接映射是不合理的。</li>
-</ul>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
-<p>手语处理流程</p>
-</blockquote>
-<ul>
-<li>视觉信息理解<ul>
-<li>这里，是个很重要的环节。在sign2text的模型中，缺少sign2gloss过程，这就相当于直接把视频翻译成自然语言，跨过了对视频的直接理解监督，这种模型的表现普遍不如利用了gloss的。而利用gloss则是相当于在中间加入了中间层监督，这样就可以更好的控制模型对输入视频的正确理解过程。</li>
-</ul>
-</li>
-<li>视觉信息到自然语言的映射</li>
-</ul>
-<blockquote>
-<p>method details</p>
-</blockquote>
-<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/method.png" alt="method framework for single layer"></p>
-<p>整个网络分为三个部分：</p>
-<ul>
-<li>SLRT(Sign Language Recognition Transformers)<ul>
-<li>整个网络框架是利用了BERT的结构，整个思路也基本上是一样的，只是输入信息不同。（BERT模型需要另做学习，这里留一个链接坑位吧<a href="？？">BERT 学习笔记</a>）<a href="https://github.com/codertimo/BERT-pytorch" target="_blank" rel="noopener">pytorch implement of BERT</a></li>
-<li>input：视频编码——利用CNN提取视频帧的feature。（这里是重要的改进点！！！）</li>
-<li>position embedding：同样是bert模型中的东西，因为基于transformer的模型的并行性，不像RNN那样有着天然的时序信息，这里通过position embedding来对时序进行建模。</li>
-<li>后面又通过self attention来进一步加强了输入视频帧各帧feature之间的语义关系（这里可能是已经能够建模前后帧之间的关系了，如果想在这里加强上下文信息关系，需要好好思考如何进行改进，这个地方更像是纯粹的NLP问题，如果有好的方式，在其他NLP领域应该也会很有用）</li>
-<li>后面经过了feed forward之后又经过了FC（linear）然后softmax算概率，最后送到CTC模块来从frame level到gloss level</li>
-</ul>
-</li>
-<li>CTC<ul>
-<li>这个模块具体内容需要更进一步学习，包括看相关代码，在NLP任务中很重要</li>
-<li>CTC算法的详细讲解博客：<a href="https://xiaodu.io/ctc-explained/" target="_blank" rel="noopener">CTC 算法解析 part1</a>，<a href="https://xiaodu.io/ctc-explained-part2/" target="_blank" rel="noopener">CTC 算法解析 part2</a>; 百度CTC loss工具包：<a href="https://github.com/baidu-research/warp-ctc" target="_blank" rel="noopener">warp-ctc</a>；<a href="https://github.com/SeanNaren/warp-ctc" target="_blank" rel="noopener">another pytorch implement</a></li>
-</ul>
-</li>
-<li>SLTT(Sign Language Translation Transformers)<ul>
-<li>这个相当于是decoder，跟bert模型完全一样的</li>
-</ul>
-</li>
-</ul>
-<h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><blockquote>
-<p>results</p>
-</blockquote>
-<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result1.png" alt="result1"></p>
-<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result2.png" alt="result2"></p>
-<p><img src="/2020/04/23/202004232043-CVPR2020-SLT/result3.png" alt="result3"></p>
-<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><p>本文总体来说算是第一次正经的好好解决了SLT的问题，虽然两年前的nslt算是开山之作，但是当时的方法很直接，也很粗暴，相当于是CSLR+NMT的简单使用，并没有做的更细致。而这一篇工作就算是SLT应该有的处理方式了，通过CNN提取视频特征，通过跟视频时序逐次对应的gloss来作为视频理解的中间监督，通过CTC来解决视频维度远大于gloss词维度的问题，然后利用更新的NMT中基于BERT的网络框架来处理翻译任务。</p>
-<p>算是一个很不错的baseline，直观简单，但是确实应该这么做。后面应该还有很大改进的空间，需要在视频理解这里花一些功夫。还有就是视频特征是否可以进行更稀疏的处理，减少不必要的冗余信息。</p>
-<h2 id="references-must-be-checked"><a href="#references-must-be-checked" class="headerlink" title="references must be checked!"></a>references must be checked!</h2><ul>
-<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Sign Language Production using Neural Machine Translation and Generative Adversarial Networks.</em> In Proceedings of the British Machine Vision Conference (BMVC), 2018.</li>
-<li>StephanieStoll,NecatiCihanCamgoz,SimonHadfield,and Richard Bowden. <em>Text2Sign: Towards Sign Language Pro- duction using Neural Machine Translation and Generative Adversarial Networks.</em> International Journal of Computer Vision (IJCV), 2020.</li>
-<li>Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko- reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. <em>Attention is All You Need.</em> In Proceedings of the Advances in Neural Information Processing Systems (NIPS), 2017.</li>
-</ul>
-<h2 id="inspirations"><a href="#inspirations" class="headerlink" title="inspirations"></a>inspirations</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/23/202004232043-CVPR2020-SLT/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -946,7 +793,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:52" itemprop="dateModified" datetime="2020-05-08T13:42:52+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:09:43" itemprop="dateModified" datetime="2020-05-12T00:09:43+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -975,71 +822,14 @@
 <p><strong>author:</strong> Chuang Gan (MIT, MIT-IBM Watson AI Lab)</p>
 <p><strong>codes available at:</strong> <a href="http://music-gesture.csail.mit.edu" target="_blank" rel="noopener">project page</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/framework.png" alt="framework"></p>
-<h2 id="problems-to-be-solved-task-definition"><a href="#problems-to-be-solved-task-definition" class="headerlink" title="problems to be solved (task definition)"></a>problems to be solved (task definition)</h2><p>问题定义：<br>把不同乐器（不同种，同种不同实例）的音频从视频中各自分离出来</p>
-<p>现有方法的问题：</p>
-<ul>
-<li>虽然现在已经有了一些这个方向的工作，也有工作开始使用visual信息来帮助分离音频。之前的工作都发现了语义信息（semantic appearances）对模型会有帮助，但是这些工作没有考虑视频中的motion cues，这样就限制了这些方法在更复杂的场景下的表现</li>
-<li>最近有人利用了temporal motion信息，但是他们基于运动轨迹和光流这样的特征（trajectory and optical flow like features），仍然是局限在对human-object interactions的建模上，没有关注到更细节的地方。</li>
-</ul>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
-<p>motivation<br>本文中，作者希望利用基于人体关键点的motion cues，同时利用visual feature和sound feature来进行音频分离（sound source separation）</p>
-</blockquote>
-<blockquote>
-<p>method details<br>作者主要在于第一次在这个细分领域使用了关键点信息来表示motion，并且整个work的模型搭建的比较完整，make sense。</p>
-</blockquote>
-<p>主要贡献在三个地方：</p>
-<ul>
-<li><p>Video Analysis Network</p>
-<ul>
-<li><p>这里主要是利用了之前用在其他领域的工作来解决新的问题</p>
-</li>
-<li><p>利用ResNet50来提取视频的首帧特征，用于做visual context feature</p>
-</li>
-<li><p>用了ST-GCN（Spatial tempo- ral graph convolutional networks for skeleton-based action recognition）来对提取的人体关键点在时空上建立图模型</p>
-</li>
-<li><p>利用了alphaPose来提取body关键点，用了一个预训练过的hand detection网络来检测双手，然后利用openpose来提取双手关键点</p>
-</li>
-<li><p>网络细节：</p>
-</li>
-<li><p>这里的GCN有11层，并带有residual link。输入是坐标点+置信度(x,y,c),并且在输入网络之前经过了BN层来使得input scale保持相同（这里还需要看看code理解细节！！！）</p>
-</li>
-<li><p>hand detection网络没有给引用和细节，估计是从git上找了一个</p>
-</li>
-<li><p>在关键点经过GCN处理后，得到的motion feature又跟之前获得的visual context feature进行了拼接，从而加入了图像信息（这个点有点意思的在于，后面的ablation实验的数据加上这个还不如不加，然而作者并没有给出合理的解释~~）</p>
-</li>
-</ul>
-</li>
-<li><p>Audio-Visual Separation Network</p>
-<ul>
-<li><p>这里作者利用了一个U-Net类型的网络，encoder-decoder结构</p>
-</li>
-<li><p>encoder输入时2d 音频的频谱</p>
-</li>
-<li><p>音频信号经encoder得到音频特征后，跟前面的visual+motion feature进行了融合（基于self attention，见下面Audio-visual fusion）</p>
-</li>
-<li><p>然后fusion feature经过对称的decoder得到最终的audio mask</p>
-</li>
-<li><p>网络细节：</p>
-</li>
-<li><p>encoder和decoder对称，都是4层空洞卷积（3 x 3 spatial filters with stride 2, dilation 1 and followed by a BatchNorm layer and a Leaky ReLU）</p>
-</li>
-</ul>
-</li>
-<li><p>Audio-visual fusion</p>
-<ul>
-<li>sound feature和visual feature先经过矩阵乘后softmax来得到attention matrix</li>
-<li>然后利用该matrix跟vision feature矩阵乘，再跟sound feature进行相加</li>
-<li>得到的结果再经过基于MLP的残差网络得到最终的fusion feature</li>
-<li><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/feature-fusion.png" alt="self attention based Audio-visual fusion"></li>
-<li>The MLP is implemented with two fully-connected layers with a ReLU activation function.</li>
-</ul>
-</li>
-</ul>
-<p>至于loss什么的细节，文章本身讲的不多，也不是这篇文章的主要关注点，在此略过。</p>
-<h2 id="experiments-and-results"><a href="#experiments-and-results" class="headerlink" title="experiments and results"></a>experiments and results</h2><p><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/result1.png" alt="result1"><br><img src="/2020/04/22/202004221543-CVPR2020-MusicGesture/result2.png" alt="result2"><br>这里的ablation实验也很简单，但是确实有上面提到的问题。</p>
-<h2 id="comments"><a href="#comments" class="headerlink" title="comments"></a>comments</h2><p>本文不是自己的主业，看了主要是增多一点视频理解的储备知识。<br>从实验结果上来看，基于keypoints和GCN的方式确实是对这种视频的理解有挺大帮助的。</p>
-<h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2><p>本文的思路在对手语翻译这个方向上应该来说有很大的借鉴意义，虽然说文中的一些方法已经被别人用过了，也不算什么新方法。不过其中的feature fusion的方式值得学习一波，手语的不同部位可以看做不同的信息源，融合不同部位的信息应该来说是有用的。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/22/202004221543-CVPR2020-MusicGesture/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1089,7 +879,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:43:00" itemprop="dateModified" datetime="2020-05-08T13:43:00+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:09:20" itemprop="dateModified" datetime="2020-05-12T00:09:20+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1118,44 +908,14 @@
 <p><strong>author:</strong> Dominik Kulon</p>
 <p><strong>codes available at:</strong> <a href="https://github.com/dkulon/hand-reconstruction" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/21/202004211039-BMVC-HMR/framework.png" alt="framework"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><p>首先，这篇文章关注的问题是hand mesh recovery，并且是单人的，也就是说，hand没有scale variation</p>
-<p>在此之前，MANO模型解决了这个问题，但是作者提出，SMPL based模型的参数太过，计算比较慢。并且MANO的顶点数太少，对细节表达能力不足</p>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>这篇文章描述比之顶会还是差了很远，方法相对来说很简单，也没有很多insight，算是做了一个数据集，一个baseline。（代码公布了，感觉做recovery的话还是可以借鉴一下的）</p>
-<blockquote>
-<p>main contribution</p>
-</blockquote>
-<p>作者主要做了三件事</p>
-<ul>
-<li>做了一个数据集<ul>
-<li>具体制作过程在原文第5章</li>
-<li>每个mesh有7907个定点，是MANO的十倍还多</li>
-<li>包含40360个训练实例，3000个验证实例，3000个测试实例。</li>
-<li>标注包括，mesh，3d keypoint（投影到图像坐标系）</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>做了一个在hand mesh上的autoencoder，输入mesh，得到mesh<ul>
-<li>利用了卷积（看文章的意思，貌似是利用了chebvGCN一样的图卷积）</li>
-<li>encoder：输入mesh定点，经过4个卷积层（conv+down sampling+lReLU）</li>
-<li>经过一个FC层（64）</li>
-<li>decoder：跟encoder对称（这个东西是真正想要的，为了后面从RGB得到mesh而训练）</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>single RGB image到相应的hand mesh<ul>
-<li>image encoder：利用了DenseNet-121提取图像特征，在imageNet上做了预训练，输出两部分：1)用于mesh decoder的mesh embeding，2)用于回归相机参数的camera embeding</li>
-<li>mesh decoder：就是前面autoencoder中的decoder，这里称之为Graph Morphable Model (GMM)——输入为64维隐层特征向量，该向量是image encoder的输出</li>
-<li>camera decoder：用于回归得到一个将mesh投影到跟图像的视角一致的相机参数，输入为image encoder得到的camera embedding，经过几层FC层得到相机参数。</li>
-<li>loss：mesh上的L1，投影得到的keypoint joints对应的L1，RGB经过image encoder得到的embedding（64维向量）跟mesh autoencoder中encoder对GT mesh进行编码得到的embedding之间的L2。(三个loss的加权系数分别为1，0.01，5e-5，并使用了L2正则，正则系数1e-5)<img src="/2020/04/21/202004211039-BMVC-HMR/loss.png" alt="objective func"></li>
-</ul>
-</li>
-</ul>
-<h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><p>这篇文章思路很简单，主要功夫在做数据集上，但是这个数据集又有些局限。并且文章叙述确实是不好，很多地方不太清楚，同时实验部分不清晰，实验结果甚至都看不到，论证的点很多没有相应的实验佐证。</p>
-<p>但无论如何，开源了代码，作为一个baseline的参考还是有价值的。</p>
-<h2 id="available-datasets"><a href="#available-datasets" class="headerlink" title="available datasets"></a>available datasets</h2><p>需要通过发送邮件来跟作者要</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/21/202004211039-BMVC-HMR/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1205,7 +965,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:43:09" itemprop="dateModified" datetime="2020-05-08T13:43:09+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:08:30" itemprop="dateModified" datetime="2020-05-12T00:08:30+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1235,61 +995,14 @@
 <p><strong>codes available at:</strong> <a href="https://github.com/zhangboshen/A2J" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/20/202004151649-ICCV2019-A2J/framework1.png" alt="main idea"></p>
 <p><img src="/2020/04/20/202004151649-ICCV2019-A2J/framework2.png" alt="framework"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
-<li>现有基于encoder-decoder FCN方式的工作基本上都利用gaussian heatmap这种non-adaptive的训练方式，其计算代价大，并且难以end2end</li>
-<li>3D CNN的方式需要训练的参数多，并且体素化操作比较麻烦且开销大</li>
-<li>基于point-set的方式则需要花费很多时间在数据预处理上</li>
-</ul>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><blockquote>
-<h3 id="motivation"><a href="#motivation" class="headerlink" title="motivation"></a>motivation</h3></blockquote>
-<p>借鉴anchor based方式，利用anchor来获得keypoints坐标。key idea是：通过多个预测anchor的偏移，然后加权求和从而获得3d pose预测，利用整体学习来获得更好的泛化性。(The key idea of A2J is to predict 3D joint position by aggregating the estimation results of multiple anchor points, in spirit of en- semble learning to enhance generalization ability.)</p>
-<h3 id="method-details"><a href="#method-details" class="headerlink" title="method details"></a>method details</h3><ul>
-<li>ResNet50 做backbone来提取特征，前三层提取common feature，最后一层提取semantic feature</li>
-<li>in-plain offset estimation branch来获得anchor的offset</li>
-<li>depth estimation branch来获得关键点的深度</li>
-<li>anchor proposal branch来获得加权权重</li>
-</ul>
-<blockquote>
-<p>in-plain offset estimation branch</p>
-</blockquote>
-<ul>
-<li>input: 从backbone提取的semantic feature(trunk), </li>
-<li>经过4个conv2d + BN + ReLU，</li>
-<li>最后经过一个output conv（16 x K x 2 通道）得到offsets，</li>
-<li>这里的16代表，每个feature point代表了16个anchor points（因为input是image经过16倍下采样的，而每个anchor是在image上每隔4个point取一个做anchor set）</li>
-</ul>
-<p><img src="/2020/04/20/202004151649-ICCV2019-A2J/in-plain.png" alt="in-plain and depth estimation"></p>
-<blockquote>
-<p>depth estimation branch</p>
-</blockquote>
-<ul>
-<li>前边跟in-plain branch一样</li>
-<li>最后经过一个output conv（16 x K x 1 通道）得到depth</li>
-</ul>
-<blockquote>
-<p>anchor proposal branch</p>
-</blockquote>
-<ul>
-<li>input: 从backbone提取的common feature(trunk),</li>
-<li>同样经过4个conv2d + BN + ReLU，</li>
-<li>最后经过一个output conv（16 x K x 1 通道）得到加权值</li>
-</ul>
-<blockquote>
-<h3 id="loss"><a href="#loss" class="headerlink" title="loss"></a>loss</h3></blockquote>
-<p><img src="/2020/04/20/202004151649-ICCV2019-A2J/loss1.png" alt="loss1"><br><img src="/2020/04/20/202004151649-ICCV2019-A2J/loss2.png" alt="loss2"></p>
-<p>loss = 3loss1 + loss2</p>
-<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><blockquote>
-<p>comparison with SOTA</p>
-</blockquote>
-<p><img src="/2020/04/20/202004151649-ICCV2019-A2J/comparision.png" alt="comparison with SOTA"></p>
-<blockquote>
-<p>ablation</p>
-</blockquote>
-<p><img src="/2020/04/20/202004151649-ICCV2019-A2J/ablation.png" alt="ablation"></p>
-<h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><h2 id="available-datasets"><a href="#available-datasets" class="headerlink" title="available datasets"></a>available datasets</h2><p>NYU: </p>
-<p><a href="https://jonathantompson.github.io/NYU_Hand_Pose_Dataset.htm#download" target="_blank" rel="noopener">website</a> </p>
-<p><a href="http://horatio.cs.nyu.edu/mit/tompson/nyu_hand_dataset_v2.zip" target="_blank" rel="noopener">data</a></p>
-<h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/20/202004151649-ICCV2019-A2J/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

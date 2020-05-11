@@ -20,17 +20,17 @@
     var CONFIG = {"hostname":"zhang-mohole.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="SIGN LANGUAGE TRANSLATION WITH TRANSFORMERSnote at: 202004232043 labels: SLT conf: ?? author: Kayo Yin,École Polytechnique codes available at: code link framework problems to be solved这篇文章提出，机器翻译在各种自">
+  <meta name="description" content="SIGN LANGUAGE TRANSLATION WITH TRANSFORMERSnote at: 202004232043 labels: SLT conf: ?? author: Kayo Yin,École Polytechnique codes available at: code link framework">
 <meta property="og:type" content="article">
 <meta property="og:title" content="202004261703-ARXIV2020-SLT2">
 <meta property="og:url" content="https://zhang-mohole.github.io/2020/04/26/202004261703-ARXIV2020-SLT2/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="SIGN LANGUAGE TRANSLATION WITH TRANSFORMERSnote at: 202004232043 labels: SLT conf: ?? author: Kayo Yin,École Polytechnique codes available at: code link framework problems to be solved这篇文章提出，机器翻译在各种自">
+<meta property="og:description" content="SIGN LANGUAGE TRANSLATION WITH TRANSFORMERSnote at: 202004232043 labels: SLT conf: ?? author: Kayo Yin,École Polytechnique codes available at: code link framework">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/26/202004261703-ARXIV2020-SLT2/framework.png">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/26/202004261703-ARXIV2020-SLT2/self-attention.jpeg">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/04/26/202004261703-ARXIV2020-SLT2/position-encoding.png">
 <meta property="article:published_time" content="2020-04-26T09:04:05.000Z">
-<meta property="article:modified_time" content="2020-05-08T05:42:35.180Z">
+<meta property="article:modified_time" content="2020-05-11T16:10:03.127Z">
 <meta property="article:author" content="Mohole Zhang">
 <meta property="article:tag" content="SLR">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-08 13:42:35" itemprop="dateModified" datetime="2020-05-08T13:42:35+08:00">2020-05-08</time>
+                <time title="Modified: 2020-05-12 00:10:03" itemprop="dateModified" datetime="2020-05-12T00:10:03+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,6 +221,7 @@
 <p><strong>author:</strong> Kayo Yin,École Polytechnique</p>
 <p><strong>codes available at:</strong> <a href="https://github.com/kayoyin/transformer-slt" target="_blank" rel="noopener">code link</a></p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/26/202004261703-ARXIV2020-SLT2/framework.png" alt="framework overview"></p>
+<a id="more"></a>
 <h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><p>这篇文章提出，机器翻译在各种自然语言之间发展的不错了，也得到了很多的关注，但是在手语翻译方面目前的研究还很少。虽然之前有SLR，CSLR的工作，但是手语到对应的自然语言之间并不是简单的逐词识别问题，而是各有自己的语言规则和语法。CSLR只解决了手语视频到每个词的直接意思的理解，即sign2gloss这个过程，但是对于sign2text，CLSR是不能胜任的。</p>
 <h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>本文作者关注的不是从sign video到text的任务，而是gloss2text这个方面，也就是说本文其实只是把其他NMT的方法直接搬到了手语的gloss上，进而做出了gloss2text这一过程。至于sign2text任务，本文没有提出新的方法，仍然利用了2018年CVPR那篇文章中的思路，直接使用一个SOTA的CSLR模型来获得sign2gloss，再把得到的gloss送进本文的transformer模型中得到最终的text。</p>
 <p>总体来说创新性不大，算是复习一遍BERT模型。</p>
