@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/05/08/202005081712-AAAI2020-STMC-SLR/SOTA-comparing1.png">
 <meta property="og:image" content="https://zhang-mohole.github.io/2020/05/08/202005081712-AAAI2020-STMC-SLR/SOTA-comparing2.png">
 <meta property="article:published_time" content="2020-05-08T09:12:15.000Z">
-<meta property="article:modified_time" content="2020-05-08T11:30:16.152Z">
+<meta property="article:modified_time" content="2020-05-14T13:17:38.655Z">
 <meta property="article:author" content="Mohole Zhang">
 <meta property="article:tag" content="SLR">
 <meta property="article:tag" content="AAAI 2020">
@@ -188,10 +188,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-05-08 17:12:15 / Modified: 19:30:16" itemprop="dateCreated datePublished" datetime="2020-05-08T17:12:15+08:00">2020-05-08</time>
+              <time title="Created: 2020-05-08 17:12:15" itemprop="dateCreated datePublished" datetime="2020-05-08T17:12:15+08:00">2020-05-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-14 21:17:38" itemprop="dateModified" datetime="2020-05-14T21:17:38+08:00">2020-05-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -241,7 +247,7 @@
 <blockquote>
 <p>details of proposed method</p>
 </blockquote>
-<h3 id="SMC-module"><a href="#SMC-module" class="headerlink" title="SMC module:"></a>SMC module:</h3><p>SMC的主干是一个轻量级的pose estimation网络，然后根据得到的1姿态估计2进行crop得到各个局部cue，进而分别3对各个cue进行进一步的特征提取。</p>
+<h3 id="SMC-module"><a href="#SMC-module" class="headerlink" title="SMC module:"></a>SMC module:</h3><p>SMC的主干是一个轻量级的pose estimation网络，然后根据得到的:1姿态估计2进行crop得到各个局部cue，进而分别3对各个cue进行进一步的特征提取。</p>
 <ul>
 <li>backbone 采用了VGG-11模型。multi-cue在本文包含了：full-frame, hands, face and pose</li>
 <li>pose estimation：在VGG的第7个conv层后加入两个deconv（stride=2，两层后feature map从14x14到56x56），得到的feature maps 继而送到point-wise conv层，得到K=7（he nose, both shoulders, both elbows and both wrists）个heatmaps</li>
@@ -266,7 +272,15 @@
 </li>
 <li>经过inter-cue和intra-cue得到的特征都又经过了一个temporal max-pooling操作（kernel size = 2, stride=2）<br><img src="/2020/05/08/202005081712-AAAI2020-STMC-SLR/TMC-module.png" alt="TMC module"></li>
 </ul>
+<h3 id="BiLSTM："><a href="#BiLSTM：" class="headerlink" title="BiLSTM："></a>BiLSTM：</h3><p>前面的STMC 模块相当于vision feature encoder，而这里的BiLSTM相当于机器翻译的decoder。论文中并没有说明这里是几层LSTM。<br>特征经LSTM之后，又经过FC层最后经过softmax函数得到对应的word预测概率。<br>预测概率之后，利用CTC loss来进行长序列到短序列的映射，进行end2end的训练。</p>
+<p>在inference阶段，使用beam search来进行解码得到sentence（实验中用的beam wigth为20）</p>
+<p>在训练的时候所有网路都参与了训练，而在inference阶段，BiLSTM并不需要intra cue部分，仅利用inter cue进行，得到最终的预测结果。</p>
+<h3 id="loss-objective-function"><a href="#loss-objective-function" class="headerlink" title="loss/objective function:"></a>loss/objective function:</h3><p>本文的主要目标是得到足够好的inter cue部分的网络，而inter cue的feature因为要融合intra cue，所以训练的loss也需要同时优化inter cue和intra cue的所有网络参数。<br>最终loss： loss = loss_inter + α∑loss_intra + βloss_r<br>其中:<br>loss_r 是pose estimation loss，是7个关键点上的smooth_L1<br>loss_inter 和 loss_intra 都是CTC loss</p>
 <h2 id="experiment-and-results"><a href="#experiment-and-results" class="headerlink" title="experiment and results"></a>experiment and results</h2><blockquote>
+<p>一些说明</p>
+</blockquote>
+<p>本文实验中，baseline是利用1D CNN来代替”temporal convolution”操作的，但是对于实际的temporal conv并没有给出明确的说明和网络细节。这个地方复现目前仅复现了baseline，具体的还需要继续探索实现。</p>
+<blockquote>
 <p>experiments setting</p>
 </blockquote>
 <ul>
@@ -276,8 +290,8 @@
 <li>Implementation Details：<ul>
 <li>input size：224x224</li>
 <li>data augmentation：random crop，discard frame，flip</li>
-<li>we utilize a staged optimization strategy. First, we train a VGG11-based network as DNF (Cui, Liu, and Zhang 2019) and use it to decode pseudo labels for each clip. Then,we add a fully-connected layer after each output of the TMC module. The STMC network without BLSTM is trained with cross-entropy and smooth-L1 loss by SGD optimizer. The batch size is 24 and the clip size is 16. Finally, with fine- tuned parameters from the previous stage, our full STMC network is trained end-to-end under joint loss optimization. We use Adam optimizer with learning rate 5e-5 and set the batch size to 2. In all experiments, we set α to 0.6 and β to 30. In fact, the experiment results are insensitive to the slight change of α(see Fig. 4), except α = 0.</li>
-<li>For finetuning, we train the STMC network without BLSTM for 25 epochs. Afterward, the whole STMC network is trained end-to-end for 30 epochs. For inference, the beam width is set to 20. Experiments are run on 4 GTX 1080Ti GPUs.</li>
+<li>we utilize a staged optimization strategy. First, we train a VGG11-based network as DNF (Cui, Liu, and Zhang 2019) and use it to decode pseudo labels for each clip. Then,we add a fully-connected layer after each output of the TMC module. The STMC network without BLSTM is <em>trained with cross-entropy and smooth-L1 loss by SGD optimizer. The batch size is 24 and the clip size is 16</em>. Finally, with finetuned parameters from the previous stage, our full STMC network is trained end-to-end under joint loss optimization. We use <em>Adam optimizer with learning rate 5e-5 and set the batch size to 2</em>. In all experiments, we set <em>α to 0.6 and β to 30</em>. In fact, the experiment results are insensitive to the slight change of α(see Fig. 4), except α = 0.</li>
+<li>For finetuning, we train the STMC network without BLSTM for 25 epochs. Afterward, the whole STMC network is trained end-to-end for 30 epochs. <em>For inference, the beam width is set to 20.</em> Experiments are run on 4 GTX 1080Ti GPUs.</li>
 </ul>
 </li>
 </ul>
@@ -373,7 +387,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Progressive-Transformers-for-End-to-End-Sign-Language-Production"><span class="nav-number">1.</span> <span class="nav-text">Progressive Transformers for End-to-End Sign Language Production</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-contribution"><span class="nav-number">1.2.</span> <span class="nav-text">main contribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">method proposed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SMC-module"><span class="nav-number">1.3.1.</span> <span class="nav-text">SMC module:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TMC-module"><span class="nav-number">1.3.2.</span> <span class="nav-text">TMC module:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiment and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inspiration"><span class="nav-number">1.6.</span> <span class="nav-text">inspiration</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Progressive-Transformers-for-End-to-End-Sign-Language-Production"><span class="nav-number">1.</span> <span class="nav-text">Progressive Transformers for End-to-End Sign Language Production</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-contribution"><span class="nav-number">1.2.</span> <span class="nav-text">main contribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">method proposed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SMC-module"><span class="nav-number">1.3.1.</span> <span class="nav-text">SMC module:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TMC-module"><span class="nav-number">1.3.2.</span> <span class="nav-text">TMC module:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BiLSTM："><span class="nav-number">1.3.3.</span> <span class="nav-text">BiLSTM：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss-objective-function"><span class="nav-number">1.3.4.</span> <span class="nav-text">loss&#x2F;objective function:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiment and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inspiration"><span class="nav-number">1.6.</span> <span class="nav-text">inspiration</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
