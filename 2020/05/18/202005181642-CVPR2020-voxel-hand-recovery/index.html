@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhang-mohole.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Mapnote at: 202005181642 labels: hand conf: CVPR 2020 author: Jameel Malik, Soshi Shimada(MPII Saarland)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="202005181642-CVPR2020-voxel_hand_recovery">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Mapnote at: 202005181642 labels: hand conf: CVPR 2020 author: Jameel Malik, Soshi Shimada(MPII Saarland)">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0_detail.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks2.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks3.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks4.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks5.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result2.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result3.png">
+<meta property="article:published_time" content="2020-05-18T08:42:29.000Z">
+<meta property="article:modified_time" content="2020-05-18T13:23:28.634Z">
+<meta property="article:author" content="Mohole Zhang">
+<meta property="article:tag" content="hand pose depth">
+<meta property="article:tag" content="CVPR2020">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png">
+
+<link rel="canonical" href="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>202005181642-CVPR2020-voxel_hand_recovery | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-hans">
+    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mohole Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          202005181642-CVPR2020-voxel_hand_recovery
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-05-18 16:42:29 / Modified: 21:23:28" itemprop="dateCreated datePublished" datetime="2020-05-18T16:42:29+08:00">2020-05-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hand-pose/" itemprop="url" rel="index"><span itemprop="name">hand pose</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map"><a href="#HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map" class="headerlink" title="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map"></a>HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map</h1><p><em>note at:</em> 202005181642</p>
+<p><em>labels:</em> hand</p>
+<p><strong>conf:</strong> CVPR 2020</p>
+<p><strong>author:</strong> Jameel Malik, Soshi Shimada(MPII Saarland)</p>
+<p><strong>no codes available:</strong> </p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p>目标：输入单张depth image, 估计N个hand keypoints的3d坐标J(3xN), K=1193个hand shape的顶点坐标 V(3xK)。</p>
+<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png" alt="framework overview"></p>
+<a id="more"></a>
+<h2 id="main-contribution"><a href="#main-contribution" class="headerlink" title="main contribution"></a>main contribution</h2><blockquote>
+<p>problems to be solved</p>
+</blockquote>
+<ul>
+<li>从单张深度图来同时估计hand的pose和shape是一个比较新的问题，存在一定的难度</li>
+<li>当前的深度学习方法多采用2D CNN直接在深度图上进行pose/shape的回归学习，但是，这类方法的高度非线性映射性质会引入perspective distortions，造成一些artifacts。<ul>
+<li>意思就是，用2D CNN方式得到的pose往往因为视角问题，可能是不准确的，在此基础上就更难得到准确的shape表示了。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>contributions of this work</p>
+</blockquote>
+<ul>
+<li>首次利用3D CNN来解决这个问题，同时对pose和shape进行处理。设计了两个互补的3D hand representation以及相应的从input voxel得到对应hand representation的子网络</li>
+<li>一个新的3D data augmentation方法，使得3D hand pose estimation步骤也有提升</li>
+<li>最后的实验结果大幅超过SOTA</li>
+</ul>
+<h2 id="method-proposed"><a href="#method-proposed" class="headerlink" title="method proposed"></a>method proposed</h2><blockquote>
+<p>大致流程</p>
+</blockquote>
+<p>整体框架：</p>
+<ul>
+<li>depth -&gt; voxel(88x88x88)</li>
+<li>V2V-PoseNet: 3d joints position(3d heatmap 44x44x44) regression</li>
+<li>V2V-ShapeNet: to get voxel shape representation(64x64x64)</li>
+<li>V2S-Net: to get the shape surface representation</li>
+<li>Shape Registraion: use two hand representations to register the final 3D hand shape</li>
+<li>(V2V-SynNet &amp; S2V-SynNet): both for weakly supervised learning, to recover resized voxel input</li>
+</ul>
+<p>整体流程：<br>见framework部分的图<br>主要是<br>1、通过获得3d joints heatmap得到pose<br>2、通过两个子网络分别得到两种hand representation，即voxel shape representation和shape surface representation<br>3、通过shape register步骤，同时利用两种representation来得到更准确的hand shape</p>
+<blockquote>
+<p>method details</p>
+</blockquote>
+<p>V2V-PoseNet:<br>这里作者引用了19年CVPR的一篇文章，直接使用了其网络进行。V2v-posenet: Voxel-to-voxel prediction network for accu- rate 3d hand and human pose estimation from a single depth map. [code link](<a href="https://github.com/mks0601/V2V-" target="_blank" rel="noopener">https://github.com/mks0601/V2V-</a> PoseNet_RELEASE)<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0.png" alt="V2V-PoseNet"><br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0_detail.png" alt="V2V-PoseNet encoder &amp; decoder"></p>
+<p>V2V-ShapeNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks1.png" alt="V2V-ShapeNet architecture details"></p>
+<p>V2S-Net:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks2.png" alt="V2S-Net architecture details."></p>
+<p>V2V-SynNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks3.png" alt="V2V-SynNet architecture details."></p>
+<p>S2V-SynNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks4.png" alt="S2V-SynNet architecture details."></p>
+<p>shape reistration:<br>DispVoxNet:是作者引用了引文（Dispvoxnets: Non-rigid point set alignment with supervised learning proxies.——3DV 2019）的网络，并进行了一点修改。该方法分两步，1、global displacement estimation； 2、refinement。本文中，作者对第2步进行了修改。使用拉普拉斯平滑方法来替换原文的refine方法（This is possible because we assume the mesh topology is already known, and it is preserved by our pipeline.）<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks5.png" alt="DispVoxNet architecture details."></p>
+<h2 id="experiment-and-results"><a href="#experiment-and-results" class="headerlink" title="experiment and results"></a>experiment and results</h2><blockquote>
+<p>experiments</p>
+</blockquote>
+<blockquote>
+<p>results</p>
+</blockquote>
+<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result1.png" alt="result1"></p>
+<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result2.png" alt="result2"></p>
+<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result3.png" alt="result3"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hand-pose-depth/" rel="tag"># hand pose depth</a>
+              <a href="/tags/CVPR2020/" rel="tag"># CVPR2020</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/08/202005081712-AAAI2020-STMC-SLR/" rel="prev" title="202005081712-AAAI2020-STMC_SLR">
+      <i class="fa fa-chevron-left"></i> 202005081712-AAAI2020-STMC_SLR
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map"><span class="nav-number">1.</span> <span class="nav-text">HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-contribution"><span class="nav-number">1.2.</span> <span class="nav-text">main contribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">method proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiment and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inspiration"><span class="nav-number">1.6.</span> <span class="nav-text">inspiration</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mohole Zhang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Mohole Zhang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mohole Zhang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
