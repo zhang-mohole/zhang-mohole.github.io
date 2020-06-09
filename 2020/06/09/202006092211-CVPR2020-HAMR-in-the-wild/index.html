@@ -20,32 +20,30 @@
     var CONFIG = {"hostname":"zhang-mohole.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Mapnote at: 202005181642 labels: hand conf: CVPR 2020 author: Jameel Malik, Soshi Shimada(MPII Saarland)">
+  <meta name="description" content="Weakly-Supervised Mesh-Convolutional Hand Reconstruction in the Wildnote at: 202006092211 labels: hand pose mesh conf: CVPR 2020 oral author: Iasonas Kokkinos et al. paper resource: dataset  framework">
 <meta property="og:type" content="article">
-<meta property="og:title" content="202005181642-CVPR2020-voxel_hand_recovery">
-<meta property="og:url" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/index.html">
+<meta property="og:title" content="202006092211-CVPR2020-HAMR_in_the_wild">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Mapnote at: 202005181642 labels: hand conf: CVPR 2020 author: Jameel Malik, Soshi Shimada(MPII Saarland)">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0_detail.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks1.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks2.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks3.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks4.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks5.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result1.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result2.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result3.png">
-<meta property="article:published_time" content="2020-05-18T08:42:29.000Z">
-<meta property="article:modified_time" content="2020-05-18T13:23:28.634Z">
+<meta property="og:description" content="Weakly-Supervised Mesh-Convolutional Hand Reconstruction in the Wildnote at: 202006092211 labels: hand pose mesh conf: CVPR 2020 oral author: Iasonas Kokkinos et al. paper resource: dataset  framework">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/framework.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/decoder.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/k-disk.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/spiral_conv.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/spiral_conv2.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/graph-sampling.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result1.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result2.png">
+<meta property="og:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result3.png">
+<meta property="article:published_time" content="2020-06-09T14:11:43.000Z">
+<meta property="article:modified_time" content="2020-06-09T15:04:44.726Z">
 <meta property="article:author" content="Mohole Zhang">
-<meta property="article:tag" content="hand pose depth">
-<meta property="article:tag" content="CVPR2020">
+<meta property="article:tag" content="hand pose mesh">
+<meta property="article:tag" content="CVPR 2020">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png">
+<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/framework.png">
 
-<link rel="canonical" href="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/">
+<link rel="canonical" href="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/">
 
 
 <script id="page-configurations">
@@ -57,7 +55,7 @@
   };
 </script>
 
-  <title>202005181642-CVPR2020-voxel_hand_recovery | Hexo</title>
+  <title>202006092211-CVPR2020-HAMR_in_the_wild | Hexo</title>
   
 
 
@@ -171,7 +169,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-hans">
-    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/">
+    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -184,7 +182,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          202005181642-CVPR2020-voxel_hand_recovery
+          202006092211-CVPR2020-HAMR_in_the_wild
         </h1>
 
         <div class="post-meta">
@@ -195,7 +193,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-05-18 16:42:29 / Modified: 21:23:28" itemprop="dateCreated datePublished" datetime="2020-05-18T16:42:29+08:00">2020-05-18</time>
+              <time title="Created: 2020-06-09 22:11:43 / Modified: 23:04:44" itemprop="dateCreated datePublished" datetime="2020-06-09T22:11:43+08:00">2020-06-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,64 +216,74 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map"><a href="#HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map" class="headerlink" title="HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map"></a>HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map</h1><p><em>note at:</em> 202005181642</p>
-<p><em>labels:</em> hand</p>
-<p><strong>conf:</strong> CVPR 2020</p>
-<p><strong>author:</strong> Jameel Malik, Soshi Shimada(MPII Saarland)</p>
-<p><strong>no codes available:</strong> </p>
-<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p>目标：输入单张depth image, 估计N个hand keypoints的3d坐标J(3xN), K=1193个hand shape的顶点坐标 V(3xK)。</p>
-<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/framework.png" alt="framework overview"></p>
-<a id="more"></a>
+        <h1 id="Weakly-Supervised-Mesh-Convolutional-Hand-Reconstruction-in-the-Wild"><a href="#Weakly-Supervised-Mesh-Convolutional-Hand-Reconstruction-in-the-Wild" class="headerlink" title="Weakly-Supervised Mesh-Convolutional Hand Reconstruction in the Wild"></a>Weakly-Supervised Mesh-Convolutional Hand Reconstruction in the Wild</h1><p><em>note at:</em> 202006092211</p>
+<p><em>labels:</em> hand pose mesh</p>
+<p><strong>conf:</strong> CVPR 2020 oral</p>
+<p><strong>author:</strong> Iasonas Kokkinos et al.</p>
+<p><strong>paper resource:</strong> <a href="https://arielai.com/mesh_hands" target="_blank" rel="noopener">dataset</a> </p>
+<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/framework.png" alt="framework overview"></p>
 <h2 id="main-contribution"><a href="#main-contribution" class="headerlink" title="main contribution"></a>main contribution</h2><blockquote>
 <p>problems to be solved</p>
 </blockquote>
 <ul>
-<li>从单张深度图来同时估计hand的pose和shape是一个比较新的问题，存在一定的难度</li>
-<li>当前的深度学习方法多采用2D CNN直接在深度图上进行pose/shape的回归学习，但是，这类方法的高度非线性映射性质会引入perspective distortions，造成一些artifacts。<ul>
-<li>意思就是，用2D CNN方式得到的pose往往因为视角问题，可能是不准确的，在此基础上就更难得到准确的shape表示了。</li>
-</ul>
-</li>
+<li>当前的3d hand recovery工作中，有mesh标注的数据集非常少，少量的数据集也多是合成数据。缺少in the wild方面的带有mesh标注的数据</li>
+<li>当前的方法并没有对in the wild方面进行尝试</li>
 </ul>
 <blockquote>
 <p>contributions of this work</p>
 </blockquote>
 <ul>
-<li>首次利用3D CNN来解决这个问题，同时对pose和shape进行处理。设计了两个互补的3D hand representation以及相应的从input voxel得到对应hand representation的子网络</li>
-<li>一个新的3D data augmentation方法，使得3D hand pose estimation步骤也有提升</li>
-<li>最后的实验结果大幅超过SOTA</li>
+<li>提出了一个高效自动化标注的方法，并给出了一个大规模的基于youtube视频的in the wild数据集</li>
+<li>提出了一个简单的encoder-decoder网络，利用spiral convlution搭建decoder在mesh上进行图卷积，并最终获得与image对应的3d hand重建结果，效果不错。</li>
 </ul>
+<a id="more"></a>
 <h2 id="method-proposed"><a href="#method-proposed" class="headerlink" title="method proposed"></a>method proposed</h2><blockquote>
-<p>大致流程</p>
-</blockquote>
-<p>整体框架：</p>
+<h3 id="dataset-and-annotation"><a href="#dataset-and-annotation" class="headerlink" title="dataset and annotation"></a>dataset and annotation</h3></blockquote>
+<p>这里的自动化标注方法主要流程：</p>
 <ul>
-<li>depth -&gt; voxel(88x88x88)</li>
-<li>V2V-PoseNet: 3d joints position(3d heatmap 44x44x44) regression</li>
-<li>V2V-ShapeNet: to get voxel shape representation(64x64x64)</li>
-<li>V2S-Net: to get the shape surface representation</li>
-<li>Shape Registraion: use two hand representations to register the final 3D hand shape</li>
-<li>(V2V-SynNet &amp; S2V-SynNet): both for weakly supervised learning, to recover resized voxel input</li>
+<li>选择youtube视频，爬取</li>
+<li>利用openpose工具进行2d关键点提取</li>
+<li>利用关键点拟合的机器学习方法，通过拟合2d关键点来迭代优化MANO参数，最终得到pair的hand mesh</li>
+<li>过滤掉那些关键点坐标置信度低的和不符合常理的数据（具体方法论文里提到了一种基于K-means的方法，没太看懂）</li>
 </ul>
-<p>整体流程：<br>见framework部分的图<br>主要是<br>1、通过获得3d joints heatmap得到pose<br>2、通过两个子网络分别得到两种hand representation，即voxel shape representation和shape surface representation<br>3、通过shape register步骤，同时利用两种representation来得到更准确的hand shape</p>
 <blockquote>
-<p>method details</p>
+<h3 id="3d-hand-recovery-network"><a href="#3d-hand-recovery-network" class="headerlink" title="3d hand recovery network"></a>3d hand recovery network</h3></blockquote>
+<p>主体结构见上面framework图</p>
+<p>其中，encoder直接利用了ResNet10来提取图片的64维特征向量（利用ResNet10是因为该网络简单高效，且作者认为其generalization能力更好）</p>
+<p>decoder部分，主要涉及了逐级coarse to dense的mesh生成过程，其中利用了spiral conv和mesh(graph) upsampling两个主要操作。<br><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/decoder.png" alt="decoder"></p>
+<blockquote>
+<p>spiral graph conv</p>
 </blockquote>
-<p>V2V-PoseNet:<br>这里作者引用了19年CVPR的一篇文章，直接使用了其网络进行。V2v-posenet: Voxel-to-voxel prediction network for accu- rate 3d hand and human pose estimation from a single depth map. [code link](<a href="https://github.com/mks0601/V2V-" target="_blank" rel="noopener">https://github.com/mks0601/V2V-</a> PoseNet_RELEASE)<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0.png" alt="V2V-PoseNet"><br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks0_detail.png" alt="V2V-PoseNet encoder &amp; decoder"></p>
-<p>V2V-ShapeNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks1.png" alt="V2V-ShapeNet architecture details"></p>
-<p>V2S-Net:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks2.png" alt="V2S-Net architecture details."></p>
-<p>V2V-SynNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks3.png" alt="V2V-SynNet architecture details."></p>
-<p>S2V-SynNet:<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks4.png" alt="S2V-SynNet architecture details."></p>
-<p>shape reistration:<br>DispVoxNet:是作者引用了引文（Dispvoxnets: Non-rigid point set alignment with supervised learning proxies.——3DV 2019）的网络，并进行了一点修改。该方法分两步，1、global displacement estimation； 2、refinement。本文中，作者对第2步进行了修改。使用拉普拉斯平滑方法来替换原文的refine方法（This is possible because we assume the mesh topology is already known, and it is preserved by our pipeline.）<br><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/networks5.png" alt="DispVoxNet architecture details."></p>
+<p>该图卷积出自论文：Neural 3D Morphable Models: Spiral Convolutional Networks for 3D Shape Representation Learning and Generation; Bouritsas et al; ICCV 2019</p>
+<p>核心概念：<br>主要是利用在mesh这样的topo结构已经固定的图上，类比于image上用的2d CNN，对于某个顶点的特征，需要先选定信号来源的顶点，然后对来源顶点上的信号进行加权求和的过程。</p>
+<ul>
+<li>这里信号来源顶点的选择利用了一种螺旋的方式，以目标顶点为中心，先找到以其为中心的k-disk，然后从内到外依次排序k-disk中包含的k-ring，这样即可获得一个顶点序列。<br><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/k-disk.png" alt="k-disk and k-ring"></li>
+<li>然后选定一个起始顶点和旋转方向，从内到外的进行旋转，将顶点序列的顺序进行固定。</li>
+<li>最后对这个序列进行图卷积。（这里限定序列长度为L，弱因为mesh边界或者某些连接错误导致长度不足，则补0）<br><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/spiral_conv.png" alt="spiral conv"><br><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/spiral_conv2.png" alt="spiral conv"></li>
+</ul>
+<blockquote>
+<p>graph up sampling</p>
+</blockquote>
+<p>这里，因为要coarse to dense逐级获得mesh，作者首先预定义了5种不同粒度的mesh，分别有 51, 100, 197, 392, 778 个定点。从778（MANO模型的原始顶点数）开始，每次基本上是缩小一半。在从coarse的mesh恢复到dense的过程中，中间多出来的顶点由与之最近的三角面片上的三个顶点坐标获得，即维护了从dense到coarse过程中的变换矩阵，利用矩阵来恢复缺失的顶点。<br><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/graph-sampling.png" alt="graph sampling"></p>
 <h2 id="experiment-and-results"><a href="#experiment-and-results" class="headerlink" title="experiment and results"></a>experiment and results</h2><blockquote>
-<p>experiments</p>
+<p>dataset</p>
 </blockquote>
+<ul>
+<li>FreiHand</li>
+<li>Rendered Hand Pose Dataset (RHD)</li>
+<li>MPII+NZSL (MPII)</li>
+<li>Monocular Total Capture(MTC)</li>
+<li>Stereo Hand Pose Tracking Benchmark (STB) </li>
+<li>our YouTube datase</li>
+<li>一些说明：本文使用的数据集中，除了FreiHand之外都是没有mesh标注的，所以都利用本文提出的方法进行了自动化标注获得了pair的hand mesh</li>
+</ul>
 <blockquote>
 <p>results</p>
 </blockquote>
-<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result1.png" alt="result1"></p>
-<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result2.png" alt="result2"></p>
-<p><img src="/2020/05/18/202005181642-CVPR2020-voxel-hand-recovery/result3.png" alt="result3"></p>
-<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2><h2 id="inspiration"><a href="#inspiration" class="headerlink" title="inspiration"></a>inspiration</h2>
+<p><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result1.png" alt="results"></p>
+<p><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result2.png" alt="results"></p>
+<p><img src="/2020/06/09/202006092211-CVPR2020-HAMR-in-the-wild/result3.png" alt="results"></p>
+<h2 id="some-comments"><a href="#some-comments" class="headerlink" title="some comments"></a>some comments</h2>
     </div>
 
     
@@ -284,8 +292,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/hand-pose-depth/" rel="tag"># hand pose depth</a>
-              <a href="/tags/CVPR2020/" rel="tag"># CVPR2020</a>
+              <a href="/tags/hand-pose-mesh/" rel="tag"># hand pose mesh</a>
+              <a href="/tags/CVPR-2020/" rel="tag"># CVPR 2020</a>
           </div>
 
         
@@ -294,13 +302,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/05/08/202005081712-AAAI2020-STMC-SLR/" rel="prev" title="202005081712-AAAI2020-STMC_SLR">
-      <i class="fa fa-chevron-left"></i> 202005081712-AAAI2020-STMC_SLR
+    <a href="/2020/05/28/202005282256-IJCAI2019-DenseTCN-SLT/" rel="prev" title="202005282256-IJCAI2019-DenseTCN_SLT">
+      <i class="fa fa-chevron-left"></i> 202005282256-IJCAI2019-DenseTCN_SLT
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/05/28/202005282256-IJCAI2019-DenseTCN-SLT/" rel="next" title="202005282256-IJCAI2019-DenseTCN_SLT">
-      202005282256-IJCAI2019-DenseTCN_SLT <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -360,7 +365,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HandVoxNet-Deep-Voxel-Based-Network-for-3D-Hand-Shape-and-Pose-Estimation-from-a-Single-Depth-Map"><span class="nav-number">1.</span> <span class="nav-text">HandVoxNet: Deep Voxel-Based Network for 3D Hand Shape and Pose Estimation from a Single Depth Map</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-contribution"><span class="nav-number">1.2.</span> <span class="nav-text">main contribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">method proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiment and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inspiration"><span class="nav-number">1.6.</span> <span class="nav-text">inspiration</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Weakly-Supervised-Mesh-Convolutional-Hand-Reconstruction-in-the-Wild"><span class="nav-number">1.</span> <span class="nav-text">Weakly-Supervised Mesh-Convolutional Hand Reconstruction in the Wild</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-contribution"><span class="nav-number">1.2.</span> <span class="nav-text">main contribution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#method-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">method proposed</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dataset-and-annotation"><span class="nav-number">1.3.1.</span> <span class="nav-text">dataset and annotation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3d-hand-recovery-network"><span class="nav-number">1.3.2.</span> <span class="nav-text">3d hand recovery network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experiment-and-results"><span class="nav-number">1.4.</span> <span class="nav-text">experiment and results</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-comments"><span class="nav-number">1.5.</span> <span class="nav-text">some comments</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
