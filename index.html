@@ -184,7 +184,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-06-30 11:03:25" itemprop="dateModified" datetime="2020-06-30T11:03:25+08:00">2020-06-30</time>
+                <time title="Modified: 2020-07-05 11:36:18" itemprop="dateModified" datetime="2020-07-05T11:36:18+08:00">2020-07-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,59 +208,95 @@
 
       
           <h1 id="hand-pose-review-Depth-Based-3D-Hand-Pose-Estimation-From-Current-Achievements-to-Future-Goals"><a href="#hand-pose-review-Depth-Based-3D-Hand-Pose-Estimation-From-Current-Achievements-to-Future-Goals" class="headerlink" title="hand pose review (Depth-Based 3D Hand Pose Estimation: From Current Achievements to Future Goals)"></a>hand pose review (Depth-Based 3D Hand Pose Estimation: From Current Achievements to Future Goals)</h1><p><a href="https://arxiv.org/pdf/1712.03917.pdf" target="_blank" rel="noopener">paper pdf</a><br>本文主要是基于depth data的回顾，主要研究对象是Hands In the Million Challenge (HIM2017)竞赛中挑出来的10个SOTA方法，对这10个方法进行了多方面的总结。</p>
-<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><ul>
-<li>很多方法的泛化性不好，凸显了更广泛、优质数据的重要性<ul>
-<li>手工标注的数据，量不够，标注难度大</li>
-<li>半自动化的标注数据，误差比较大</li>
-<li>合成数据则有domain gap</li>
-</ul>
-</li>
-<li>视角、shape的多变性</li>
-<li>自遮挡问题</li>
-<li>物体遮挡问题<h2 id="主流的解决方法"><a href="#主流的解决方法" class="headerlink" title="主流的解决方法"></a>主流的解决方法</h2></li>
-<li>2D CNN vs 3D CNN<ul>
-<li>2d就是对depth map进行crop，缩放，归一化等操作，把数值规范到[-1,1]</li>
-<li>3d是对depth进行voxelize或者转化为projective D-TSDF作为输入</li>
-</ul>
-</li>
-<li>detection based vs regression based<ul>
-<li>detection-based方法主要是获得density map或者类似heatmap(posibility)的结果，进而获得关键点坐标</li>
-<li>regression-based方法则是直接进行回归跟pose相关的数据，包括scale，关节角度，坐标等</li>
-</ul>
-</li>
-<li>Hierarchical models<ul>
-<li>这种方法是把hand按一定方式进行分解，拆成不同的小问题来分别处理，最后综合起来。比如按手指进行划分，或者按不同的关节进行划分，每个划分利用一个子网络来检测，最后一个feed forward来进行融合。</li>
-<li><em>这种方法对于解决遮挡问题能起到一定作用</em></li>
-</ul>
-</li>
-<li>Structured methods<ul>
-<li>这类方法是考虑手部的结构信息作为先验，然后把这种先验用某种方式来加入的模型中。例如考虑手的prior融合到网络中的某一层，考虑手的（反）运动学约束使之融入到网络的某一层或者考虑在loss中，不用关键点而是利用手指骨头来进行估计。</li>
-<li><em>实验结果中，把先验信息加入loss要比加入网络结构更有效；使用手指骨头比以关键点为目标对解决遮挡问题更有效</em></li>
-</ul>
-</li>
-<li>Multi-stage methods<ul>
-<li>多阶段逐步优化，每个阶段可以针对性的加入不同的监督信息</li>
-<li><em>实验结果上看，多阶段要优于单阶段方法</em></li>
-</ul>
-</li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>3D volumetric representations used with a 3D CNN show high performance</li>
-<li>Detection-based方法整体比regression-based方法好，但是在加入一些spatial constraints后，回归方法可以超过检测方法，在极端视角方面也做的更好。</li>
-<li>虽然自遮挡问题仍然是个挑战，但是当加入structure constraints and spa-tial relation between joints后，可以一定程度上解决遮挡问题</li>
-<li>Discriminative methods still generalize poorly to un- seen hand shapes. Data augmentation and scale estimation methods model only global shape changes, but not local variations. Integrating hand models with better generative capability may be a promising direction.</li>
-<li>在手势估计任务中，在常见视角下的误差已经比较小，但是在极端视角下的姿态估计仍然是个很大的挑战，multi-stage方法似乎是有一定的帮助</li>
-<li>Current methods perform well on single hand pose estimation when trained on a million-scale dataset, but have difficulty in generalizing to hand-object interaction. Two directions seem promising, (a) designing better hand segmentation methods, and (b) training the model with large datasets containing hand-object interaction.</li>
-</ul>
-<ul>
-<li>对于遮挡现象，手指的遮挡影响比其他关节点更明显</li>
-</ul>
-<h2 id="尚未解决的问题"><a href="#尚未解决的问题" class="headerlink" title="尚未解决的问题"></a>尚未解决的问题</h2><ul>
-<li>极端自遮挡问题</li>
-<li>泛化性问题</li>
-<li>H+O情况下尚有很大提升空间，主要是更严重的互遮挡问题</li>
-</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/29/hand-pose-review/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-hans">
+    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/06/29/paper-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mohole Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/29/paper-list/" class="post-title-link" itemprop="url">hand_pose_review</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-29 22:47:40" itemprop="dateCreated datePublished" datetime="2020-06-29T22:47:40+08:00">2020-06-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-05 11:47:34" itemprop="dateModified" datetime="2020-07-05T11:47:34+08:00">2020-07-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/planning/" itemprop="url" rel="index"><span itemprop="name">planning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="paper-list"><a href="#paper-list" class="headerlink" title="paper list"></a>paper list</h1><p>this blog records the paper I read or to-read</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/29/paper-list/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -973,92 +1009,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-hans">
-    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/04/26/202004261703-ARXIV2020-SLT2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mohole Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/26/202004261703-ARXIV2020-SLT2/" class="post-title-link" itemprop="url">202004261703-ARXIV2020-SLT2</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-04-26 17:04:05" itemprop="dateCreated datePublished" datetime="2020-04-26T17:04:05+08:00">2020-04-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-12 00:10:03" itemprop="dateModified" datetime="2020-05-12T00:10:03+08:00">2020-05-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/sign-language/" itemprop="url" rel="index"><span itemprop="name">sign language</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="SIGN-LANGUAGE-TRANSLATION-WITH-TRANSFORMERS"><a href="#SIGN-LANGUAGE-TRANSLATION-WITH-TRANSFORMERS" class="headerlink" title="SIGN LANGUAGE TRANSLATION WITH TRANSFORMERS"></a>SIGN LANGUAGE TRANSLATION WITH TRANSFORMERS</h1><p><em>note at:</em> 202004232043</p>
-<p><em>labels:</em> SLT</p>
-<p><strong>conf:</strong> ??</p>
-<p><strong>author:</strong> Kayo Yin,École Polytechnique</p>
-<p><strong>codes available at:</strong> <a href="https://github.com/kayoyin/transformer-slt" target="_blank" rel="noopener">code link</a></p>
-<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/26/202004261703-ARXIV2020-SLT2/framework.png" alt="framework overview"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/26/202004261703-ARXIV2020-SLT2/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1131,20 +1081,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
