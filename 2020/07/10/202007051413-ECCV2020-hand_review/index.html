@@ -20,23 +20,20 @@
     var CONFIG = {"hostname":"zhang-mohole.github.io","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Single Image 3D Hand Reconstruction with Mesh Convolutionsnote at: 202004211039 labels: hand pose mesh conf: BMVC 2019(CCF C) author: Dominik Kulon codes available at: code link framework">
+  <meta name="description" content="Measuring Generalisation to Unseen Viewpoints, Articulations, Shapes and Objects for 3D Hand Pose Estimation under Hand-Object Interactionpaper pdf本文是一个从hand pose相关的三个任务出发，对参与Hands’19竞赛的各方法进行了深入的分析。主要">
 <meta property="og:type" content="article">
-<meta property="og:title" content="202004211039-BMVC-HMR">
-<meta property="og:url" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/index.html">
+<meta property="og:title" content="hand_pose_review">
+<meta property="og:url" content="https://zhang-mohole.github.io/2020/07/10/202007051413-ECCV2020-hand_review/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Single Image 3D Hand Reconstruction with Mesh Convolutionsnote at: 202004211039 labels: hand pose mesh conf: BMVC 2019(CCF C) author: Dominik Kulon codes available at: code link framework">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/framework.png">
-<meta property="og:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/loss.png">
-<meta property="article:published_time" content="2020-04-21T02:39:55.000Z">
-<meta property="article:modified_time" content="2020-05-11T16:09:20.287Z">
+<meta property="og:description" content="Measuring Generalisation to Unseen Viewpoints, Articulations, Shapes and Objects for 3D Hand Pose Estimation under Hand-Object Interactionpaper pdf本文是一个从hand pose相关的三个任务出发，对参与Hands’19竞赛的各方法进行了深入的分析。主要">
+<meta property="article:published_time" content="2020-07-10T06:13:40.000Z">
+<meta property="article:modified_time" content="2020-07-10T06:57:58.810Z">
 <meta property="article:author" content="Mohole Zhang">
-<meta property="article:tag" content="hand pose mesh">
-<meta property="article:tag" content="others">
+<meta property="article:tag" content="review">
+<meta property="article:tag" content="ECCV 2020">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/framework.png">
 
-<link rel="canonical" href="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/">
+<link rel="canonical" href="https://zhang-mohole.github.io/2020/07/10/202007051413-ECCV2020-hand_review/">
 
 
 <script id="page-configurations">
@@ -48,7 +45,7 @@
   };
 </script>
 
-  <title>202004211039-BMVC-HMR | Hexo</title>
+  <title>hand_pose_review | Hexo</title>
   
 
 
@@ -162,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-hans">
-    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/04/21/202004211039-BMVC-HMR/">
+    <link itemprop="mainEntityOfPage" href="https://zhang-mohole.github.io/2020/07/10/202007051413-ECCV2020-hand_review/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -175,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          202004211039-BMVC-HMR
+          hand_pose_review
         </h1>
 
         <div class="post-meta">
@@ -184,16 +181,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-04-21 10:39:55" itemprop="dateCreated datePublished" datetime="2020-04-21T10:39:55+08:00">2020-04-21</time>
+              <time title="Created: 2020-07-10 14:13:40 / Modified: 14:57:58" itemprop="dateCreated datePublished" datetime="2020-07-10T14:13:40+08:00">2020-07-10</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-12 00:09:20" itemprop="dateModified" datetime="2020-05-12T00:09:20+08:00">2020-05-12</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -215,50 +206,37 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Single-Image-3D-Hand-Reconstruction-with-Mesh-Convolutions"><a href="#Single-Image-3D-Hand-Reconstruction-with-Mesh-Convolutions" class="headerlink" title="Single Image 3D Hand Reconstruction with Mesh Convolutions"></a>Single Image 3D Hand Reconstruction with Mesh Convolutions</h1><p><em>note at:</em> 202004211039</p>
-<p><em>labels:</em> hand pose mesh</p>
-<p><strong>conf:</strong> BMVC 2019(CCF C)</p>
-<p><strong>author:</strong> Dominik Kulon</p>
-<p><strong>codes available at:</strong> <a href="https://github.com/dkulon/hand-reconstruction" target="_blank" rel="noopener">code link</a></p>
-<h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/04/21/202004211039-BMVC-HMR/framework.png" alt="framework"></p>
+        <h1 id="Measuring-Generalisation-to-Unseen-Viewpoints-Articulations-Shapes-and-Objects-for-3D-Hand-Pose-Estimation-under-Hand-Object-Interaction"><a href="#Measuring-Generalisation-to-Unseen-Viewpoints-Articulations-Shapes-and-Objects-for-3D-Hand-Pose-Estimation-under-Hand-Object-Interaction" class="headerlink" title="Measuring Generalisation to Unseen Viewpoints, Articulations, Shapes and Objects for 3D Hand Pose Estimation under Hand-Object Interaction"></a>Measuring Generalisation to Unseen Viewpoints, Articulations, Shapes and Objects for 3D Hand Pose Estimation under Hand-Object Interaction</h1><p><a href="https://arxiv.org/pdf/2003.13764.pdf" target="_blank" rel="noopener">paper pdf</a><br>本文是一个从hand pose相关的三个任务出发，对参与Hands’19竞赛的各方法进行了深入的分析。主要研究了当前SOTA的方法在泛化性上的进展与挑战，分析了目前仍然存在的问题，以及后面可能的趋势。<br>三个任务分别是：1）基于深度图的single hand pose estimation；2）基于深度图（H+O场景）的single hand pose estimation；3）基于RGB的H+O场景下的pose estimation</p>
 <a id="more"></a>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><p>首先，这篇文章关注的问题是hand mesh recovery，并且是单人的，也就是说，hand没有scale variation</p>
-<p>在此之前，MANO模型解决了这个问题，但是作者提出，SMPL based模型的参数太过，计算比较慢。并且MANO的顶点数太少，对细节表达能力不足</p>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>这篇文章描述比之顶会还是差了很远，方法相对来说很简单，也没有很多insight，算是做了一个数据集，一个baseline。（代码公布了，感觉做recovery的话还是可以借鉴一下的）</p>
+<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>由于hand pose本身的复杂性，在数据收集的问题上本身存在各种各样的难度，而目前深度学习基于数据的方法会遇到泛化性问题，又可以细分到以下几个方面：</p>
+<ul>
+<li>view point</li>
+<li>articulation</li>
+<li>shape</li>
+<li>object interaction</li>
+</ul>
+<h2 id="本文的主要研究点"><a href="#本文的主要研究点" class="headerlink" title="本文的主要研究点"></a>本文的主要研究点</h2><ul>
+<li>(a) to evaluate the influence of both depth and color modalities on 3D hand pose estimation, under the presence or absence of objects; </li>
+<li>(b) to assess the generalisation abilities w.r.t. four main axes: shapes, articulations, viewpoints, and objects; </li>
+<li>(c) to explore the use of a synthetic hand model to fill the gaps of current datasets.</li>
+</ul>
+<p>Our analyses highlight the impacts of: Data pre-processing, ensemble approaches, the use of MANO model, and different HPE methods/backbones.</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>利用model-based方法来生成新的fake data来进行数据增广的方式可以有效的解决一些泛化性问题。但是由于hand pose本身问题空间的复杂性和高维度，单纯的增广所需数据量过于庞大，目前多采用随机采样等sampling方式来进行增广</li>
+<li>ensemble的影响较为明显。使用生成数据，不同的backbone，2D, 3D or local-estimators等等，这些方法的优势进行整合的方式会得到一定的泛化能力。Our analyses highlight the impacts of using ensembles, the use of synthetic images, different type of HPEs e.g. 2D, 3D or local-estimators and post-processing. </li>
+<li>interpolation问题（新的数据在训练数据集中，其视角，articulation等是见过的）现在的方法可以做的不错了，但是extrapolation问题目前还存在很大的问题，尤其是在H+O问题中，目前的方法都还不够好</li>
+</ul>
 <blockquote>
-<p>main contribution</p>
+<p>一点展望</p>
 </blockquote>
-<p>作者主要做了三件事</p>
 <ul>
-<li>做了一个数据集<ul>
-<li>具体制作过程在原文第5章</li>
-<li>每个mesh有7907个定点，是MANO的十倍还多</li>
-<li>包含40360个训练实例，3000个验证实例，3000个测试实例。</li>
-<li>标注包括，mesh，3d keypoint（投影到图像坐标系）</li>
+<li>良好的sampling方式结合数据增广可以被进一步探索</li>
+<li>real-synthetic domain adaptation可能能够帮助解决（外推泛化问题）</li>
 </ul>
-</li>
+<h2 id="尚未解决的问题"><a href="#尚未解决的问题" class="headerlink" title="尚未解决的问题"></a>尚未解决的问题</h2><ul>
+<li>仍然存在极端视角，articulation等情况下的泛化性问题</li>
+<li>H+O的问题也有挑战</li>
 </ul>
-<ul>
-<li>做了一个在hand mesh上的autoencoder，输入mesh，得到mesh<ul>
-<li>利用了卷积（看文章的意思，貌似是利用了chebvGCN一样的图卷积）</li>
-<li>encoder：输入mesh定点，经过4个卷积层（conv+down sampling+lReLU）</li>
-<li>经过一个FC层（64）</li>
-<li>decoder：跟encoder对称（这个东西是真正想要的，为了后面从RGB得到mesh而训练）</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>single RGB image到相应的hand mesh<ul>
-<li>image encoder：利用了DenseNet-121提取图像特征，在imageNet上做了预训练，输出两部分：1)用于mesh decoder的mesh embeding，2)用于回归相机参数的camera embeding</li>
-<li>mesh decoder：就是前面autoencoder中的decoder，这里称之为Graph Morphable Model (GMM)——输入为64维隐层特征向量，该向量是image encoder的输出</li>
-<li>camera decoder：用于回归得到一个将mesh投影到跟图像的视角一致的相机参数，输入为image encoder得到的camera embedding，经过几层FC层得到相机参数。</li>
-<li>loss：mesh上的L1，投影得到的keypoint joints对应的L1，RGB经过image encoder得到的embedding（64维向量）跟mesh autoencoder中encoder对GT mesh进行编码得到的embedding之间的L2。(三个loss的加权系数分别为1，0.01，5e-5，并使用了L2正则，正则系数1e-5)<img src="/2020/04/21/202004211039-BMVC-HMR/loss.png" alt="objective func"></li>
-</ul>
-</li>
-</ul>
-<h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><p>这篇文章思路很简单，主要功夫在做数据集上，但是这个数据集又有些局限。并且文章叙述确实是不好，很多地方不太清楚，同时实验部分不清晰，实验结果甚至都看不到，论证的点很多没有相应的实验佐证。</p>
-<p>但无论如何，开源了代码，作为一个baseline的参考还是有价值的。</p>
-<h2 id="available-datasets"><a href="#available-datasets" class="headerlink" title="available datasets"></a>available datasets</h2><p>需要通过发送邮件来跟作者要</p>
 
     </div>
 
@@ -268,8 +246,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/hand-pose-mesh/" rel="tag"># hand pose mesh</a>
-              <a href="/tags/others/" rel="tag"># others</a>
+              <a href="/tags/review/" rel="tag"># review</a>
+              <a href="/tags/ECCV-2020/" rel="tag"># ECCV 2020</a>
           </div>
 
         
@@ -278,13 +256,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/20/202004151649-ICCV2019-A2J/" rel="prev" title="202004151649-ICCV2019-A2J">
-      <i class="fa fa-chevron-left"></i> 202004151649-ICCV2019-A2J
+    <a href="/2020/06/29/hand-pose-review/" rel="prev" title="hand_pose_review">
+      <i class="fa fa-chevron-left"></i> hand_pose_review
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/04/22/202004221543-CVPR2020-MusicGesture/" rel="next" title="202004221543-CVPR2020-MusicGesture">
-      202004221543-CVPR2020-MusicGesture <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -344,7 +319,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Single-Image-3D-Hand-Reconstruction-with-Mesh-Convolutions"><span class="nav-number">1.</span> <span class="nav-text">Single Image 3D Hand Reconstruction with Mesh Convolutions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#framework"><span class="nav-number">1.1.</span> <span class="nav-text">framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problems-to-be-solved"><span class="nav-number">1.2.</span> <span class="nav-text">problems to be solved</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods-proposed"><span class="nav-number">1.3.</span> <span class="nav-text">methods proposed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussions"><span class="nav-number">1.4.</span> <span class="nav-text">discussions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#available-datasets"><span class="nav-number">1.5.</span> <span class="nav-text">available datasets</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Measuring-Generalisation-to-Unseen-Viewpoints-Articulations-Shapes-and-Objects-for-3D-Hand-Pose-Estimation-under-Hand-Object-Interaction"><span class="nav-number">1.</span> <span class="nav-text">Measuring Generalisation to Unseen Viewpoints, Articulations, Shapes and Objects for 3D Hand Pose Estimation under Hand-Object Interaction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#存在的问题"><span class="nav-number">1.1.</span> <span class="nav-text">存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本文的主要研究点"><span class="nav-number">1.2.</span> <span class="nav-text">本文的主要研究点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">1.3.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尚未解决的问题"><span class="nav-number">1.4.</span> <span class="nav-text">尚未解决的问题</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
