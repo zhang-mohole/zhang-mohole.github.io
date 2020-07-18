@@ -940,7 +940,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-18 17:21:37" itemprop="dateModified" datetime="2020-07-18T17:21:37+08:00">2020-07-18</time>
+                <time title="Modified: 2020-07-18 17:29:45" itemprop="dateModified" datetime="2020-07-18T17:29:45+08:00">2020-07-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -970,25 +970,14 @@
 <p><strong>codes available at:</strong> <a href="https://lingtengqiu.github.io/2020/03/22/OPEC-Net/" target="_blank" rel="noopener">project page</a></p>
 <p><strong>some other codes:</strong> <a href="https://github.com/MVIG-SJTU/AlphaPose/tree/pytorch" target="_blank" rel="noopener">alphaPose</a>; <a href="https://github.com/leoxiaobin/pose.pytorch" target="_blank" rel="noopener">SimplePose</a> used as baseline in this paper</p>
 <h2 id="framework"><a href="#framework" class="headerlink" title="framework"></a>framework</h2><p><img src="/2020/03/26/202003261236-OPEC-Net/OPECNet-framework.png" alt="OPECNet-framework"></p>
-<h2 id="problems-to-be-solved"><a href="#problems-to-be-solved" class="headerlink" title="problems to be solved"></a>problems to be solved</h2><ul>
-<li>现有的人体姿态估计主流方法都基于heatmap，这种方法对于可见部分效果好，但是对于遮挡情况下，不可见的部分难以得到准确的预测，甚至偏差很大。而当前对于遮挡问题的解决研究不足，没有能够解决这个问题的有效方法。</li>
-<li>目前还没有人在姿态估计中利用GCN的方法</li>
-</ul>
-<h2 id="motivation"><a href="#motivation" class="headerlink" title="motivation"></a>motivation</h2><p>在现有的heatmap基础上，把人体pose本身具有图性质的特点利用上，利用图结构作为一种先验来弥补heatmap方法难以解决的不可见区域估计问题。</p>
-<h2 id="contribution"><a href="#contribution" class="headerlink" title="contribution"></a>contribution</h2><ul>
-<li>一种基于heatmap和Graph network的新型人体姿态估计网络结构</li>
-<li>一个新的关注不可见部位的数据集，遮挡情况明显多于其他数据集</li>
-</ul>
-<h2 id="methods-proposed"><a href="#methods-proposed" class="headerlink" title="methods proposed"></a>methods proposed</h2><p>总体方法：</p>
-<ul>
-<li>先利用AlphaPose的网络作为基本pose和图像feature提取器，获得initial pose（先得到heatmap然后经过<em>引文22</em>中的方法将heatmap representation转化到coordinate representation且保证这一步可导，利于做end2end学习）和image feature maps（三个层次）</li>
-<li>得到initial pose和feature map后，对于feature map，输入到（CFA模块，cascade feature adaptation）进行多尺度的context feature融合，最终得到三个尺度的feature准备输入图网络</li>
-<li>对于initial pose，将作为IGP-GCN（image guided processing GCN）模块的输入。这个部分initial pose作为输入图，经过了三次ResGCN Attention block的处理，逐步从coarse到fine的修正initial pose，最终得到final pose</li>
-</ul>
-<h2 id="results"><a href="#results" class="headerlink" title="results"></a>results</h2><h2 id="discussions"><a href="#discussions" class="headerlink" title="discussions"></a>discussions</h2><h2 id="some-inspirations"><a href="#some-inspirations" class="headerlink" title="some inspirations"></a>some inspirations</h2><ul>
-<li>本文中在GCN部分，利用了coarse to fine的过程，过程中每一步都有监督，可以看做是一种中间监督，最近看的几篇文章可以说都用到了这种中间监督的方式，并都起到了良好的作用，可见在网络学习过程中，有意的加入中间层的监督会让模型更具解释性，也更可预测，并且能够起到良好的作用。</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/26/202003261236-OPEC-Net/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
